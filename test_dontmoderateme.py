@@ -34,11 +34,10 @@ class dontmoderatemeTestCase(unittest.TestCase):
 
     def create_user(self,
                     email='test@test.com',
-                    name='Testy McTesterson',
                     password='test',
                     activated=True):
         """Create and return a user object"""
-        user = models.User(email, name, password, activated)
+        user = models.User(email, password, activated)
         db.session.add(user)
         db.session.commit()
         return user

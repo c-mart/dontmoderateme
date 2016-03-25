@@ -15,7 +15,12 @@ class LoginForm(Form):
 
 class RegistrationForm(Form):
     """Register a new user"""
-    pass
+    email = StringField('Email Address',
+                        default=None,
+                        validators=[DataRequired(), Email()])
+    password = PasswordField('Password',
+                             default=None,
+                             validators=[DataRequired()])
 
 
 class MonitorForm(Form):

@@ -7,17 +7,15 @@ class User(db.Model):
     """User object"""
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String)
-    name = db.Column(db.String)
+    email = db.Column(db.String, unique=True)
     pw_hash = db.Column(db.Binary)
     pw_salt = db.Column(db.Binary)
     activated = db.Column(db.Boolean)  # Set to True once user clicks link in activation email
     enabled = db.Column(db.Boolean)
     create_timestamp = db.Column(db.DateTime)
 
-    def __init__(self, email, name, password, enabled=True, activated=False):
+    def __init__(self, email, password, enabled=True, activated=False):
         self.email = email
-        self.name = name
         self.pw_salt = urandom(16)
         self.pw_hash = helpers.pw_hash(password, self.pw_salt)
         self.enabled = enabled

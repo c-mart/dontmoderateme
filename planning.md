@@ -9,6 +9,11 @@ Things user may want to do:
 Dashboard should show recent events, recently created monitors, and their status
 
 ## To do
+- Test creating duplicate user accounts
+- Re-send activation email if user tries to log into an account that is not activated
+- Flask should send encrypted email
+- let user change password
+- reset password function
 - "Contact site administrator" form
 - Write a couple of views to CRUD monitors
 - Implement background worker deque to perform checks
@@ -17,9 +22,13 @@ Dashboard should show recent events, recently created monitors, and their status
 - Registration form should email the user their password salt (perhaps base64-encoded) and make them activate their account
 - "Check now" button places request at the front of the work queue (so we actually need a deque)
 - How to deal with loading 404 pages?
-- Don't let a user view another user's monitors
+- Don't let a user view another user's monitors, checks, or screenshots
 
 - Where to place code to "email user a notification if their monitor changes state"?
+
+## Extended Features
+- only accept strong passwords, perhaps use python-zxcvbn
+
 
 ## Ideas
 - How to handle "probable" but not exact matches? Match percentage?

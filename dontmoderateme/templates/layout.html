@@ -37,7 +37,7 @@
             <h1>Don't Moderate Me</h1>
         {% endblock %}
         {% for message in get_flashed_messages() %}
-            <div class='flash'>{{ message }}</div>
+            <div class='flash'>{{ message | safe }}</div>
         {% endfor %}
         <div class="row">
             {% block body %}{% endblock %}
