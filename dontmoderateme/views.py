@@ -12,6 +12,20 @@ import base64
 def hello_world():
     return 'Hello World!'
 
+
+def send_activation_email(user):
+    """Sends account activation email to passed user object"""
+    activation_url = url_for('activate', code=base64.urlsafe_b64encode(user.pw_salt), _external=True)
+    body = "Please visit this page to activate your account: %s" % activation_url
+    html_body = "Please click this link to activate your account: <a href=\"{0}\">{0}</a>".format(activation_url)
+    msg = flask_mail.Message(subject="Activate your account on Don't Moderate Me",
+                             sender="activation@dontmoderate.me",
+                             recipients=[user.email],
+                             body=body,
+                             html=html_body)
+    mail.send(msg)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 @limiter.limit('1/minute', methods=['POST'])
 def register():
@@ -33,16 +47,8 @@ def register():
             models.db.session.add(user)
             models.db.session.commit()
             # Send activation email
-            activation_url = url_for('activate', id=user.id, code=base64.urlsafe_b64encode(user.pw_hash), _external=True)
-            body = "Please visit this link to activate your account: %s" % activation_url
-            html_body = "Please activate your account: <a href=\"{0}\">{0}</a>".format(activation_url)
-            msg = flask_mail.Message(subject="Activate your account on Don't Moderate Me",
-                                     sender="activation@dontmoderate.me",
-                                     recipients=[form.email.data],
-                                     body=body,
-                                     html=html_body)
-            mail.send(msg)
-            return render_template('activate.html', form=form)
+            send_activation_email(user)
+            return render_template('activate.html')
 
         else:
             # Return form to user and tell them to fix their input
@@ -51,8 +57,16 @@ def register():
 
 @app.route('/activate', methods=['GET'])
 def activate():
-    return request.args.get('id') + " and " + request.args.get('code')
-    # todo finish this
+    """Activate user account from link in activation email."""
+    salt = base64.urlsafe_b64decode(request.args.get('code'))
+    user = models.User.query.filter_by(pw_salt=salt).first_or_404()
+    if user.activated is False:
+        user.activated = True
+        models.db.session.commit()
+        flash("Thanks, your account has been activated! Please log in to continue.")
+    else:
+        flash("You have already activated your account.")
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['GET', 'POST'])

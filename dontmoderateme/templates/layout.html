@@ -29,6 +29,7 @@
                 <li class="right-nav-li"><p>Logged in as {{ current_user.name }}</p></li>
             {% else %}
                 <li class="right-nav-li"><a href="{{ url_for('login') }}">Login</a></li>
+                <li class="right-nav-li"><a href="{{ url_for('register') }}">Register</a></li>
             {% endif %}
         </ul>
     </div>
