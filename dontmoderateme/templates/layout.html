@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Don't Moderate Me</title>
+    {% block head %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='dark-tango-skeleton.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}" />
+</head>
+<body>
+    <div class="top-nav">
+        <ul>
+            <li class="left-nav-li"><a href="{{ url_for('hello_world') }}">Derp</a></li>
+            <li class="left-nav-li"><a href="{{ url_for('hello_world') }}">Doo</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="right-nav-li"><a href="{{ url_for('logout') }}">Log out</a></li>
+                <li class="dropdown right-nav-li">
+                    <a href="#" class="dropbtn">▼ Dropdown</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('hello_world') }}">Uno</a>
+                        <a href="{{ url_for('hello_world') }}">Dos</a>
+                        <a href="{{ url_for('hello_world') }}">Tres</a>
+                        <a href="{{ url_for('hello_world') }}">Catorce</a>
+                    </div>
+                </li>
+                <li class="right-nav-li"><p>Logged in as {{ current_user.name }}</p></li>
+            {% else %}
+                <li class="right-nav-li"><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="container">
+        {% block title %}
+            <h1>Don't Moderate Me</h1>
+        {% endblock %}
+        {% for message in get_flashed_messages() %}
+            <div class='flash'>{{ message }}</div>
+        {% endfor %}
+        <div class="row">
+            {% block body %}{% endblock %}
+        </div>
+        <div class="footer">Don't Moderate Me. Copyright 2016 Chris Martin.</div>
+    </div>
+</body>
+</html>

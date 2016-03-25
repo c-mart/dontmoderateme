@@ -1,7 +1,15 @@
 ## Design concerns
 What happens when someone feeds a malicious URL? Sandbox the renderer somehow? Use splash in a docker container that runs as a non-privileged user and is destroyed/re-created frequently?
 
+Things user may want to do:
+- View recent events (and their screenshots)
+- Manage monitors (view, create new, edit existing, delete)
+- View all events and checks for a monitor
+
+Dashboard should show recent events, recently created monitors, and their status
+
 ## To do
+- "Contact site administrator" form
 - Write a couple of views to CRUD monitors
 - Implement background worker deque to perform checks
 - Create valid urls like 'http://reddit.com' from things like 'reddit.com'. Just require user to enter a valid URL, validate with WTForms.

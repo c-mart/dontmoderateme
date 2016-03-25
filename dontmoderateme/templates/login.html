@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% from "_helpers.html" import render_field %}
+{% block body %}
+    <h2>Login</h2>
+
+    <form action="{{ url_for('login') }}" method="POST">
+        <div class="row">
+            <div class="six columns">
+                {{ form.hidden_tag() }}
+                <p>{{ render_field(form.email, class="u-full-width") }}</p>
+                <p>{{ render_field(form.password, class="u-full-width") }}</p>
+                <span class="u-pull-right"><input type="submit" value="Log in" class="button-primary" /></span>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
