@@ -1,4 +1,22 @@
 {% extends 'layout.html' %}
 {% block body %}
-Welcome to Don't Moderate Me
+    <h2>Get notified when your online posts are removed.</h2>
+    <p>You set and forget, Don't Moderate Me checks every day. If your content disappears or is modified, we take a picture and send you an email. (Otherwise, we won't bother you!)</p>
+    <p>
+        Use it for:
+        <ul>
+            <li>Social Media</li>
+            <li>Forum Posts</li>
+            <li>Product Reviews</li>
+            <li>Craigslist Ads</li>
+            <li>Blog Comments</li>
+        </ul>
+        ...or any time you're concerned that someone will moderate the content that you post online.
+    </p>
+
+    <p>Don't Moderate Me is a proof of concept that lets you to monitor any text on most publicly visible URLs. It doesn't work for private sites that require a login (like Facebook).</p>
+
+    <div class="center">
+        <a class="button button-primary" href="{{ url_for('register') }}">Sign Up for Free</a>
+    </div>
 {% endblock %}

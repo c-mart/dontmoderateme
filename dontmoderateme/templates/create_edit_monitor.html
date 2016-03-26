@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% from "_helpers.html" import render_field %}
+{% block body %}
+    {% if edit == True %}
+        <h2>Edit Monitor</h2>
+    {% else %}
+        <h2>Create Monitor</h2>
+    {% endif %}
+
+    <form action="{% if edit == True %}{{ url_for('edit_monitor') }}{% else %}{{ url_for('create_monitor') }}{% endif %}" method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ render_field(form.url, class="u-full-width") }}</p>
+        <p>{{ render_field(form.text, class="u-full-width") }}</p>
+        <p>{{ render_field(form.description, class="u-full-width") }}</p>
+        <div class="row">
+            <div class="six columns">
+                <p>{{ render_field(form.recaptcha) }}</p>
+            </div>
+            <div class="six columns">
+                <span class="u-pull-right"><input type="submit" value="Submit" class="button-primary" /></span>
+            </div>
+        </div>
+    </form>
+
+
+{% endblock %}

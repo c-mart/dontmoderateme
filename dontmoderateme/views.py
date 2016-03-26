@@ -8,17 +8,6 @@ import flask_mail
 from sqlalchemy.orm.exc import NoResultFound
 import base64
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@login_manager.user_loader
-def user_loader(user_id):
-    """Retrieves user object for login manager."""
-    try:
-        return models.User.query.filter_by(id=int(user_id)).one()
-    except NoResultFound:
-        return None
 
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
@@ -33,8 +22,22 @@ def send_activation_email(user):
     mail.send(msg)
 
 
+@login_manager.user_loader
+def user_loader(user_id):
+    """Retrieves user object associated with user_id for login manager."""
+    try:
+        return models.User.query.filter_by(id=int(user_id)).one()
+    except NoResultFound:
+        return None
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
 @app.route('/register', methods=['GET', 'POST'])
-@limiter.limit('1/minute', methods=['POST'])
+@limiter.limit('3/minute', methods=['POST'])
 def register():
     """Render login page or process login attempt"""
     form = forms.RegistrationForm()
@@ -46,23 +49,17 @@ def register():
             return render_template('register.html', form=form)
     elif request.method == 'POST':
         if form.validate_on_submit():
-            if len(form.password.data) < 8:
-                flash('Please use a password with at least 8 characters.')
-                return render_template('register.html', form=form)
             # Confirm that email address does not exist already
             if models.User.query.filter_by(email=form.email.data).first():
                 flash('There is already an account for that email address.<br /> Please log in or reset your password.')
                 return redirect(url_for('login'))
-            # Create new user
             user = models.User(form.email.data, form.password.data)
             models.db.session.add(user)
             models.db.session.commit()
-            # Send activation email
             send_activation_email(user)
             return render_template('activate.html')
-
         else:
-            # Return form to user and tell them to fix their input
+            # Validation failed, tell user to fix their input
             return render_template('register.html', form=form)
 
 
@@ -107,8 +104,9 @@ def login():
             # Return form to user and tell them to fix their input
             return render_template('login.html', form=form)
 
-@app.route('/logout')
+
 @flask_login.login_required
+@app.route('/logout')
 def logout():
     """Logs user out."""
     flask_login.logout_user()
@@ -116,9 +114,68 @@ def logout():
     return redirect(url_for('home'))
 
 
+@flask_login.login_required
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
+
+
+@flask_login.login_required
+@app.route('/view-monitor/<monitor_id>')
+def view_monitor(monitor_id):
+    monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
+    return render_template('view_monitor.html', monitor=monitor)
+
+
+@flask_login.login_required
+@app.route('/create-monitor', methods=['GET', 'POST'])
+def create_monitor():
+    """Create a new monitor"""
+    form = forms.MonitorForm()
+    if request.method == 'GET':
+        return render_template('create_edit_monitor.html', form=form)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            monitor = models.Monitor(user_id=flask_login.current_user.id,
+                                     url=form.url.data,
+                                     text=form.text.data,
+                                     description=form.description.data)
+            models.db.session.add(monitor)
+            models.db.session.commit()
+            flash('Monitor created successfully.')
+            return redirect(url_for('view_monitor', monitor_id=monitor.id))
+        else:
+            # Validation failed, tell user to fix their input
+            flash('There was a problem creating your monitor, please see below.')
+            return render_template('create_edit_monitor.html', form=form)
+
+
+@flask_login.login_required
+@app.route('/edit-monitor/<monitor_id>', methods=['GET', 'POST'])
+def edit_monitor(monitor_id):
+    """Edit existing monitor"""
+    monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
+    # TODO preload form with monitor details
+    form = forms.MonitorForm()
+    if request.method == 'GET':
+        return render_template('create_edit_monitor.html', form=form, edit=True)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            # TODO update monitor from validated form input
+            flash('Monitor updated successfully.')
+            return redirect(url_for('view_monitor', monitor_id=monitor.id))
+        else:
+            # Validation failed, tell user to fix their input
+            flash('There was a problem updating your monitor, please see below.')
+            return render_template('create_edit_monitor.html', form=form, edit=True)
+
+
+@flask_login.login_required
+@app.route('/delete-monitor')
+def delete_monitor():
+    # TODO me
+    pass
+
 
 @app.errorhandler(429)
 def rate_limit_exceeded_handler(e):

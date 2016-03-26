@@ -46,7 +46,7 @@ ul {
 
 .container {
     max-width: 725px;
-    margin-top: 7.0rem;
+    margin-top: 2.5rem;
     margin-bottom: 5.0rem;
 }
 
@@ -193,4 +193,8 @@ table {
 
 .g-recaptcha {
     margin-bottom: 2rem;
+}
+
+.center {
+    text-align: center;
 }

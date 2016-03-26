@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% from "_helpers.html" import render_field %}
+{% block body %}
+    <h2>View Monitor</h2>
+    URL: {{ monitor.url }}<br />
+    Text: {{ monitor.text }}<br />
+    {% for check in monitor.checks.all() %}
+        {{ check.result }}
+        {{ check.timestamp }}
+    {% endfor %}
+
+
+{% endblock %}

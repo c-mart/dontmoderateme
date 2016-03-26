@@ -1,6 +1,6 @@
-from flask_wtf import Form
-from wtforms import StringField, PasswordField
-from wtforms.validators import DataRequired, URL, Email
+from flask_wtf import Form, RecaptchaField
+from wtforms import StringField, PasswordField, TextAreaField
+from wtforms.validators import DataRequired, URL, Email, EqualTo, Length
 
 
 class LoginForm(Form):
@@ -20,9 +20,19 @@ class RegistrationForm(Form):
                         validators=[DataRequired(), Email()])
     password = PasswordField('Password',
                              default=None,
-                             validators=[DataRequired()])
+                             validators=[DataRequired(),
+                                         Length(min=8)])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[EqualTo('password',
+                                                         message='Passwords must match')])
+    recaptcha = RecaptchaField()
 
 
 class MonitorForm(Form):
     """Create or update a monitor"""
-    pass
+    url = StringField('Which URL should we check?',
+                      validators=[DataRequired(),
+                                  URL()])
+    text = TextAreaField('What text should we look for?', validators=[DataRequired()])
+    description = StringField('Brief description (optional)')
+    recaptcha = RecaptchaField('Are you a robot?')
