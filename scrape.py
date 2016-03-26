@@ -1,15 +1,26 @@
-from datetime import datetime
-import dryscrape
-from os import path
+import requests
 import re
-import sys
-import slugify
 from bs4 import BeautifulSoup
 
-if 'linux' in sys.platform:
-    # start xvfb in case no X is running. Make sure xvfb
-    # is installed, otherwise this won't work!
-    dryscrape.start_xvfb()
+splash_endpoint = 'http://localhost:8050'
+
+
+def get_text_from_html(html):
+    """Extract and return text from HTML"""
+    soup = BeautifulSoup(html, 'html5lib')
+    text = soup.get_text()
+    return text
+
+
+def get_page(url):
+    """Get text and JPEG image of the web page at URL. Returns a tuple of text and base64-encoded image"""
+    params = {'url': url, 'html': 1, 'jpeg': 1, 'render_all': 1, 'wait': 0.1}
+    r = requests.get(splash_endpoint + "/render.json", params=params)
+    resp_dict = r.json()
+    html = resp_dict.get('html')
+    image = resp_dict.get('jpeg')
+    text = get_text_from_html(html)
+    return text, image
 
 
 def _strip_text(text):
@@ -18,31 +29,9 @@ def _strip_text(text):
     return re.sub("\s*", "", text.lower())
 
 
-def get_text_on_page(url):
-    """Returns string of text on web page specified by url.
-    """
-    sess = dryscrape.Session()
-    sess.set_attribute('auto_load_images', False)
-    sess.visit(url)
-    html = sess.body()
-    soup = BeautifulSoup(html, 'html5lib')
-    text = soup.get_text()
-    return text
+def check(url, search_text):
+    """Checks if search_text is on URL, returns tuple of boolean and base64-encoded JPEG image of page"""
+    page_text, page_image = get_page(url)
+    return _strip_text(search_text) in _strip_text(page_text), page_image
 
-
-def is_text_on_page(search_text, url):
-    """Determines whether text is present on url.
-    Returns boolean.
-    """
-    url_text = get_text_on_page(url)
-    return _strip_text(search_text) in _strip_text(url_text)
-
-
-def render_png(url, file_path=None):
-    """Renders a .PNG image of web page specified by url.
-    Image will be saved in current directory unless a file path is specified by path keyword argument.
-    """
-    sess = dryscrape.Session()
-    sess.visit(url)
-    filename = path.join(file_path if file_path is not None else '', slugify.slugify(url) + '_' + datetime.utcnow().strftime("%Y-%m-%d_%H:%M:%S") + '.png')
-    return sess.render(filename)
+print(check('http://blog.c-mart.in', 'ham sandwich'))
