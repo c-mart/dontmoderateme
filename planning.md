@@ -16,6 +16,7 @@ Dashboard should show recent events, recently created monitors, and their status
 - Automatically prepend "http://" or "https://" in form input for URL
 - "help, something is broken" button
 - Fix recaptcha validation failure "The response parameter is missing."
+- Don't show recaptcha on edit monitor page
 - Don't let user create a duplicate monitor
 - Set captcha keys
 - Flask should send encrypted email

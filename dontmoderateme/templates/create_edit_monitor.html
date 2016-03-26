@@ -7,7 +7,7 @@
         <h2>Create Monitor</h2>
     {% endif %}
 
-    <form action="{% if edit == True %}{{ url_for('edit_monitor') }}{% else %}{{ url_for('create_monitor') }}{% endif %}" method="POST">
+    <form action="{% if edit == True %}{{ url_for('edit_monitor', monitor_id=monitor.id) }}{% else %}{{ url_for('create_monitor') }}{% endif %}" method="POST">
         {{ form.hidden_tag() }}
         <p>{{ render_field(form.url, class="u-full-width") }}</p>
         <p>{{ render_field(form.text, class="u-full-width") }}</p>

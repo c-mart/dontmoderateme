@@ -117,12 +117,14 @@ def logout():
 @flask_login.login_required
 @app.route('/dashboard')
 def dashboard():
+    """View dashboard"""
     return render_template('dashboard.html')
 
 
 @flask_login.login_required
 @app.route('/view-monitor/<monitor_id>')
 def view_monitor(monitor_id):
+    """View an existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
     return render_template('view_monitor.html', monitor=monitor)
 
@@ -155,26 +157,32 @@ def create_monitor():
 def edit_monitor(monitor_id):
     """Edit existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
-    # TODO preload form with monitor details
-    form = forms.MonitorForm()
+    form = forms.MonitorForm(request.form, monitor)
     if request.method == 'GET':
-        return render_template('create_edit_monitor.html', form=form, edit=True)
+        return render_template('create_edit_monitor.html', form=form, monitor=monitor, edit=True)
     elif request.method == 'POST':
         if form.validate_on_submit():
-            # TODO update monitor from validated form input
+            monitor.url = form.url.data
+            monitor.text = form.text.data
+            monitor.description = form.description.data
+            models.db.session.commit()
             flash('Monitor updated successfully.')
             return redirect(url_for('view_monitor', monitor_id=monitor.id))
         else:
             # Validation failed, tell user to fix their input
             flash('There was a problem updating your monitor, please see below.')
-            return render_template('create_edit_monitor.html', form=form, edit=True)
+            return render_template('create_edit_monitor.html', form=form, monitor=monitor, edit=True)
 
 
 @flask_login.login_required
-@app.route('/delete-monitor')
-def delete_monitor():
-    # TODO me
-    pass
+@app.route('/delete-monitor/<monitor_id>')
+def delete_monitor(monitor_id):
+    """Delete a monitor"""
+    monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
+    models.db.session.delete(monitor)
+    models.db.session.commit()
+    flash('Monitor has been deleted.')
+    return redirect(url_for('dashboard'))
 
 
 @app.errorhandler(429)
