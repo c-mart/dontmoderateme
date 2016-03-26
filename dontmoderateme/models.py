@@ -68,13 +68,18 @@ class Monitor(db.Model):
 
     @property
     def state(self):
-        return self.checks
+        last_check = self.checks.order_by(Check.timestamp.desc()).first()
+        if last_check is not None:
+            return last_check.result
+        return None
 
 
 class Check(db.Model):
     """Check object. Belongs to a monitor, indicates the results of a page load and result of match."""
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref=db.backref('checks', lazy='dynamic'))
     monitor_id = db.Column(db.Integer, db.ForeignKey('monitor.id'))
     monitor = db.relationship('Monitor', backref=db.backref('checks', lazy='dynamic'))
     result = db.Column(db.Boolean)
@@ -87,13 +92,13 @@ class Check(db.Model):
         self.result = result
         self.timestamp = timestamp or datetime.utcnow()
         # If the previous check returned a different result than this check, set changed to True
-        prev_check = Check.query.order_by(Check.timestamp.desc()).first()
+        prev_check = Check.query.filter_by(monitor_id=self.monitor_id).order_by(Check.timestamp.desc()).first()
         if prev_check is not None:
             prev_result = prev_check.result
-            if prev_result != result:
-                self.changed = True
-            else:
+            if prev_result == result:
                 self.changed = False
+        else:
+            self.changed = True
         # Todo retrieve and store screenshot (or reference to it) if changed is True
 
     def __repr__(self):

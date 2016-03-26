@@ -4,12 +4,12 @@
     <h2>View Monitor</h2>
     <a href="{{ url_for('edit_monitor', monitor_id = monitor.id) }}">Edit Monitor</a><br />
     <a href="{{ url_for('delete_monitor', monitor_id = monitor.id) }}">Delete Monitor</a><br />
-    Description: {{ monitor.description }}
+    State: {{ monitor.state | friendly_state }}<br />
+    Description: {{ monitor.description }}<br />
     URL: {{ monitor.url }}<br />
     Text: {{ monitor.text }}<br />
     {% for check in monitor.checks.all() %}
         {{ check.result }}
         {{ check.timestamp }}
     {% endfor %}
-    
 {% endblock %}

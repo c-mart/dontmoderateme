@@ -118,7 +118,11 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     """View dashboard"""
-    return render_template('dashboard.html')
+    monitors = models.Monitor.query.filter_by(user=flask_login.current_user).\
+        order_by(models.Monitor.create_timestamp.desc()).all()
+    checks = models.Check.query.filter_by(user=flask_login.current_user, changed=True).\
+        order_by(models.Check.timestamp.desc()).all()
+    return render_template('dashboard.html', monitors=monitors, checks=checks)
 
 
 @flask_login.login_required
@@ -190,3 +194,16 @@ def rate_limit_exceeded_handler(e):
     """Warns user that they have hit the rate limiter."""
     flash('You have tried doing that too often. Please wait a minute before trying again.')
     return make_response(redirect(request.referrer))
+
+# Jinja2 display filters
+
+
+@app.template_filter('friendly_state')
+def friendly_state(state):
+    """Returns human-friendly text for state of monitor"""
+    if state is None:
+        return "Check again soon"
+    elif state is False:
+        return "Monitor is down!"
+    elif state is True:
+        return "Monitor is up"
