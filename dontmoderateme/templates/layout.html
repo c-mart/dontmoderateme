@@ -13,20 +13,20 @@
 <body>
     <div class="top-nav">
         <ul>
-            <li class="left-nav-li"><a href="{{ url_for('hello_world') }}">Derp</a></li>
-            <li class="left-nav-li"><a href="{{ url_for('hello_world') }}">Doo</a></li>
+            <li class="left-nav-li"><a href="{{ url_for('home') }}">Derp</a></li>
+            <li class="left-nav-li"><a href="{{ url_for('home') }}">Doo</a></li>
             {% if current_user.is_authenticated %}
                 <li class="right-nav-li"><a href="{{ url_for('logout') }}">Log out</a></li>
                 <li class="dropdown right-nav-li">
                     <a href="#" class="dropbtn">▼ Dropdown</a>
                     <div class="dropdown-content">
-                        <a href="{{ url_for('hello_world') }}">Uno</a>
-                        <a href="{{ url_for('hello_world') }}">Dos</a>
-                        <a href="{{ url_for('hello_world') }}">Tres</a>
-                        <a href="{{ url_for('hello_world') }}">Catorce</a>
+                        <a href="{{ url_for('home') }}">Uno</a>
+                        <a href="{{ url_for('home') }}">Dos</a>
+                        <a href="{{ url_for('home') }}">Tres</a>
+                        <a href="{{ url_for('home') }}">Catorce</a>
                     </div>
                 </li>
-                <li class="right-nav-li"><p>Logged in as {{ current_user.name }}</p></li>
+                <li class="right-nav-li"><p>Logged in as {{ current_user.email }}</p></li>
             {% else %}
                 <li class="right-nav-li"><a href="{{ url_for('login') }}">Login</a></li>
                 <li class="right-nav-li"><a href="{{ url_for('register') }}">Register</a></li>

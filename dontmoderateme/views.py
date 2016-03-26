@@ -9,9 +9,16 @@ from sqlalchemy.orm.exc import NoResultFound
 import base64
 
 @app.route('/')
-def hello_world():
-    return 'Hello World!'
+def home():
+    return render_template('index.html')
 
+@login_manager.user_loader
+def user_loader(user_id):
+    """Retrieves user object for login manager."""
+    try:
+        return models.User.query.filter_by(id=int(user_id)).one()
+    except NoResultFound:
+        return None
 
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
@@ -32,7 +39,11 @@ def register():
     """Render login page or process login attempt"""
     form = forms.RegistrationForm()
     if request.method == 'GET':
-        return render_template('register.html', form=form)
+        if flask_login.current_user.is_authenticated is True:
+            flash("You're already logged in, log out to register for an account")
+            return redirect(url_for('home'))
+        else:
+            return render_template('register.html', form=form)
     elif request.method == 'POST':
         if form.validate_on_submit():
             if len(form.password.data) < 8:
@@ -95,6 +106,15 @@ def login():
         else:
             # Return form to user and tell them to fix their input
             return render_template('login.html', form=form)
+
+@app.route('/logout')
+@flask_login.login_required
+def logout():
+    """Logs user out."""
+    flask_login.logout_user()
+    flash('You are logged out.')
+    return redirect(url_for('home'))
+
 
 @app.route('/dashboard')
 def dashboard():

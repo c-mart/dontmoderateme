@@ -32,8 +32,8 @@ class User(db.Model):
 
     @property
     def is_active(self):
-        """Returns boolean indicating whether user is active (i.e. they can log in)."""
-        return self.active
+        """Returns boolean indicating whether user is enabled (i.e. they can log in)."""
+        return self.enabled
 
     @property
     def is_anonymous(self):
