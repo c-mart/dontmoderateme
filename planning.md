@@ -1,14 +1,20 @@
 ## Performing Checks
 Every check_interval period of time, all monitors should be checked
 A monitor is stale when its last check occurred more then check_interval ago
-Background process (daemon) periodically queries database for monitors that are about to go stale
+
+Background process (check_daemon.py) does this.
+While True:
+    Query database for monitors that are due to be checked
+    If any monitors are due to be checked:
+        perform a check
+        store check in database
+    Sleep for a minute
 For each monitor returned by the query, a check is run and stored in the database
 
-Background process
-Looks for 
 
 ## Design concerns
-Would it be smart or dumb to store large (hundreds of KB) base64-encoded images in database? Store images in database for now, move them somewhere else later
+Would it be smart or dumb to store large (hundreds of KB) base64-encoded images in database? Store images in database for now, move them somewhere else later. Switch to SQLAlchemy-imageattach?
+Is HAR better than image?
 What happens when someone feeds a malicious URL? Sandbox the renderer somehow? Use splash in a docker container that runs as a non-privileged user and is destroyed/re-created frequently?
 Place sensitive stuff (like SECRET_KEY, recaptcha keys, and mail server) in environment variables?
 

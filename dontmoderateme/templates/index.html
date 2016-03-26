@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block body %}
     <h2>Get notified when your online posts are removed.</h2>
-    <p>You set and forget, Don't Moderate Me checks every day. If your content disappears or is modified, we take a picture and send you an email. (Otherwise, we won't bother you!)</p>
+    <p>You set and forget, Don't Moderate Me checks every day. If your content disappears or is modified, we save a picture and send you an email. (Otherwise, we won't bother you!)</p>
     <p>
         Use it for:
         <ul>
@@ -14,7 +14,9 @@
         ...or any time you're concerned that someone will moderate the content that you post online.
     </p>
 
-    <p>Don't Moderate Me is a proof of concept that lets you to monitor any text on most publicly visible URLs. It doesn't work for private sites that require a login (like Facebook).</p>
+    <p>Don't Moderate Me is a proof of concept that lets you to monitor any text on most publicly visible URLs. It doesn't (yet) work for private sites that require a login (like Facebook).</p>
+
+    <p>For each URL that we monitor, you see an audit trail of events with an image of the web page for each event.</p>
 
     <div class="center">
         <a class="button button-primary" href="{{ url_for('register') }}">Sign Up for Free</a>

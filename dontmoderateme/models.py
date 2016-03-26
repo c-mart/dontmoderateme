@@ -1,4 +1,5 @@
 from dontmoderateme import db, helpers
+from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime
 from os import urandom
 
@@ -73,6 +74,18 @@ class Monitor(db.Model):
             return last_check.result
         return None
 
+    @hybrid_property
+    def last_check_time(self):
+        """Returns last check time of a monitor as a datetime object.
+        Returns Unix Epoch if monitor has never been checked."""
+        last_check = Check.query.filter_by(monitor_id=self.id).order_by(Check.timestamp.desc()).first()
+        if last_check is None:
+            return datetime.utcfromtimestamp(0)
+        return last_check.timestamp
+
+
+
+
 
 class Check(db.Model):
     """Check object. Belongs to a monitor, indicates the results of a page load and result of match."""
@@ -85,21 +98,25 @@ class Check(db.Model):
     result = db.Column(db.Boolean)
     timestamp = db.Column(db.DateTime)
     changed = db.Column(db.Boolean)
-    screenshot = None  # todo figure this out
+    screenshot = db.Column(db.LargeBinary)
 
-    def __init__(self, monitor_id, result, timestamp=None, screenshot=None):
-        self.monitor_id = monitor_id
+    def __init__(self, monitor, result, screenshot, timestamp=None):
+        self.monitor_id = monitor.id
+        self.user_id = monitor.user_id
         self.result = result
         self.timestamp = timestamp or datetime.utcnow()
-        # If the previous check returned a different result than this check, set changed to True
+        # This check is changed (and screenshot is stored) if there is no previous check or if result has changed
         prev_check = Check.query.filter_by(monitor_id=self.monitor_id).order_by(Check.timestamp.desc()).first()
+        # TODO refactor this block to DRY
         if prev_check is not None:
-            prev_result = prev_check.result
-            if prev_result == result:
+            if prev_check.result == result:
                 self.changed = False
+            else:
+                self.changed = True
+                self.screenshot = screenshot
         else:
             self.changed = True
-        # Todo retrieve and store screenshot (or reference to it) if changed is True
+            self.screenshot = screenshot
 
     def __repr__(self):
         return '<Check ' + str(self.result) + ' on ' + self.monitor.url + '>'
