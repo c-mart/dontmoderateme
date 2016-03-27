@@ -1,15 +1,57 @@
 {% extends 'layout.html' %}
 {% from "_helpers.html" import render_field %}
+{% block title %}
+<h1>View Monitor</h1>
+{% endblock %}
 {% block body %}
-    <h2>View Monitor</h2>
-    <a href="{{ url_for('edit_monitor', monitor_id = monitor.id) }}">Edit Monitor</a><br />
-    <a href="{{ url_for('delete_monitor', monitor_id = monitor.id) }}">Delete Monitor</a><br />
-    State: {{ monitor.state | friendly_state }}<br />
-    Description: {{ monitor.description }}<br />
-    URL: {{ monitor.url }}<br />
-    Text: {{ monitor.text }}<br />
-    {% for check in monitor.checks.all() %}
-        {{ check.result }}
-        {{ check.timestamp }}
-    {% endfor %}
+    <h2>Status</h2>
+    <p><strong>{{ monitor.state | friendly_state }}</strong> since {{ events[0].timestamp | human_elapsed_time }} ago<br />
+    Last check {{ checks[0].timestamp | human_elapsed_time }} ago</p>
+    <h2>Info</h2>
+    <p>Description: {{ monitor.description }}</p>
+    <p>URL: {{ monitor.url }}</p>
+    <p>Text: {{ monitor.text }}</p>
+    <p>
+        <a href="{{ url_for('edit_monitor', monitor_id = monitor.id) }}" class="button">Edit Monitor</a>
+        <a href="{{ url_for('delete_monitor', monitor_id = monitor.id) }}" class="button">Delete Monitor</a>
+    </p>
+    <h2>Events</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Image</th>
+        </tr>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.timestamp.strftime('%Y-%m-%d') }}</td>
+                <td>{{ event.timestamp.strftime('%H:%M') }} UTC</td>
+                <td>{{ event.result | friendly_state }}</td>
+                <td><a href="{{ url_for('view_event_image', check_id=event.id) }}">View</a></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>{{ monitor.create_timestamp.strftime('%Y-%m-%d') }}</td>
+            <td>{{ monitor.create_timestamp.strftime('%H:%M') }} UTC</td>
+            <td>Monitor Created</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <h2>All Checks</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+        {% for check in checks %}
+            <tr>
+                <td>{{ check.timestamp.strftime('%Y-%m-%d') }}</td>
+                <td>{{ check.timestamp.strftime('%H:%M') }} UTC</td>
+                <td>{{ check.result | friendly_state }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

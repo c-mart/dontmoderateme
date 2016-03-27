@@ -1,23 +1,47 @@
 {% extends 'layout.html' %}
+{% block title %}
+<h1>Dashboard</h1>
+{% endblock %}
 {% block body %}
     Welcome to Don't Moderate Me.
-    <h2>Dashboard</h2>
-    <h3>Recent Events</h3>
-    <h3>Your Monitors</h3>
-    <table>
-        <tr>
-            <th>Description</th>
-            <th>URL</th>
-            <th>State</th>
-            <th></th>
-        </tr>
-        {% for monitor in monitors %}
+    <h2>Recent Events</h2>
+    {% if checks %}
+        <table>
             <tr>
-                <td>{{ monitor.description }}</td>
-                <td>{{ monitor.url }}</td>
-                <td>{{ monitor.state | friendly_state }}</td>
-                <td><a href="{{ url_for('view_monitor', monitor_id=monitor.id) }}">View</a></td>
+                <th>When</th>
+                <th>Monitor</th>
+                <th>Event</th>
+                <th>Image</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for check in checks %}
+                <tr>
+                    <td>{{ check.timestamp | human_elapsed_time }} ago</td>
+                    <td><a href="{{ url_for('view_monitor', monitor_id=check.monitor.id) }}">{{ check.monitor.description }}</a></td>
+                    <td>{{ check.result | friendly_state }}</td>
+                    <td><a href="{{ url_for('view_event_image', check_id=check.id) }}">View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no recent events.</p>
+    {% endif %}
+    <h2>Your Monitors</h2>
+    {% if monitors %}
+        <table>
+            <tr>
+                <th>Monitor</th>
+                <th>URL</th>
+                <th>State</th>
+            </tr>
+            {% for monitor in monitors %}
+                <tr>
+                    <td><a href="{{ url_for('view_monitor', monitor_id=monitor.id) }}"><strong>{{ monitor.description }}</strong></a></td>
+                    <td>{{ monitor.url }}</td>
+                    <td>{{ monitor.state | friendly_state }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no monitors. Go create some monitors!</p>
+    {% endif %}
 {% endblock %}

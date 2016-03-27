@@ -7,7 +7,8 @@ import flask_login
 import flask_mail
 from sqlalchemy.orm.exc import NoResultFound
 import base64
-
+from datetime import datetime
+import humanize
 
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
@@ -130,7 +131,11 @@ def dashboard():
 def view_monitor(monitor_id):
     """View an existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
-    return render_template('view_monitor.html', monitor=monitor)
+    checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
+        .order_by(models.Check.timestamp.desc()).all()
+    events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
+        .order_by(models.Check.timestamp.desc()).all()
+    return render_template('view_monitor.html', monitor=monitor, events=events, checks=checks)
 
 
 @flask_login.login_required
@@ -189,6 +194,15 @@ def delete_monitor(monitor_id):
     return redirect(url_for('dashboard'))
 
 
+@flask_login.login_required
+@app.route('/event-image/<check_id>')
+def view_event_image(check_id):
+    check = models.Check.query.filter_by(id=check_id, user=flask_login.current_user).first_or_404()
+    response = make_response(check.screenshot)
+    response.headers['Content-Type'] = 'image/jpeg'
+    return response
+
+
 @app.errorhandler(429)
 def rate_limit_exceeded_handler(e):
     """Warns user that they have hit the rate limiter."""
@@ -204,6 +218,12 @@ def friendly_state(state):
     if state is None:
         return "Check again soon"
     elif state is False:
-        return "Monitor is down!"
+        return "Monitor Down"
     elif state is True:
-        return "Monitor is up"
+        return "Monitor Up"
+
+
+@app.template_filter('human_elapsed_time')
+def human_elapsed_time(timestamp):
+    """Returns human-friendly text for time elapsed since timestamp"""
+    return humanize.naturaldelta(datetime.utcnow() - timestamp)

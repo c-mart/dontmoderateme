@@ -1,16 +1,6 @@
-## Performing Checks
-Every check_interval period of time, all monitors should be checked
-A monitor is stale when its last check occurred more then check_interval ago
-
-Background process (check_daemon.py) does this.
-While True:
-    Query database for monitors that are due to be checked
-    If any monitors are due to be checked:
-        perform a check
-        store check in database
-    Sleep for a minute
-For each monitor returned by the query, a check is run and stored in the database
-
+Email user when check has changed
+Include link to monitor
+Display checks on web UI
 
 ## Design concerns
 Would it be smart or dumb to store large (hundreds of KB) base64-encoded images in database? Store images in database for now, move them somewhere else later. Switch to SQLAlchemy-imageattach?
@@ -18,11 +8,17 @@ Is HAR better than image?
 What happens when someone feeds a malicious URL? Sandbox the renderer somehow? Use splash in a docker container that runs as a non-privileged user and is destroyed/re-created frequently?
 Place sensitive stuff (like SECRET_KEY, recaptcha keys, and mail server) in environment variables?
 
-##Tests to write
+## Tests to write
 - Creating duplicate user accounts
 - Creating account with password confirm field that doesn't match
 
 ## To do
+- Refactor "screenshot" to "image"
+- Learn user's time zone and show timestamps in it
+- Immediately check monitor after creation
+- For each monitor, allow user to view all checks or just events
+- Daemonize monitor checking daemon
+- Add logging to check daemon
 - Remove dryscrape from project
 - Automatically prepend "http://" or "https://" in form input for URL
 - "help, something is broken" button

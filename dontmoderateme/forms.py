@@ -34,5 +34,5 @@ class MonitorForm(Form):
                       validators=[DataRequired(),
                                   URL()])
     text = TextAreaField('What text should we look for?', validators=[DataRequired()])
-    description = StringField('Brief description (optional)')
+    description = StringField('Brief description')
     recaptcha = RecaptchaField('Are you a robot?')
