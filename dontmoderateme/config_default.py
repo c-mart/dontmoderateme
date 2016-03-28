@@ -1,3 +1,5 @@
+SERVER_NAME = '127.0.0.1:5000'
+
 SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/dontmoderateme.sqlite'
 SECRET_KEY = 'CHANGEME123'  # todo change this
 RATELIMIT_ENABLED = True

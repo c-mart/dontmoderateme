@@ -100,9 +100,9 @@ class Check(db.Model):
     changed = db.Column(db.Boolean)
     screenshot = db.Column(db.LargeBinary)
 
-    def __init__(self, monitor, result, screenshot, timestamp=None):
-        self.monitor_id = monitor.id
-        self.user_id = monitor.user_id
+    def __init__(self, monitor_id, result, screenshot, timestamp=None):
+        self.monitor_id = monitor_id
+        self.user_id = Monitor.query.filter_by(id=monitor_id).one().user_id
         self.result = result
         self.timestamp = timestamp or datetime.utcnow()
         # This check is changed (and screenshot is stored) if there is no previous check or if result has changed
