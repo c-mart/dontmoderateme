@@ -2,6 +2,14 @@ I have a minimum functional prototype. What now?
 - Write tests
 - Deploy. We need four containers: flask app, check_daemon, splash, and postgres. Our config should live somewhere private. We also need to learn to use Docker Compose.
 
+Password Reset
+- Model to store tokens with user IDs
+- Button on login page to reset password
+- View to request password reset, sends email
+- View to process password reset, forwards to prompt user to change password
+
+...so I also need a change password view
+
 ## Design concerns
 - Do we need to daemonize check_daemon if it will run in a docker container, or not?
 - Would it be smart or dumb to store large (hundreds of KB) base64-encoded images in database? Store images in database for now, move them somewhere else later. Switch to SQLAlchemy-imageattach?
@@ -14,6 +22,7 @@ I have a minimum functional prototype. What now?
 - Creating account with password confirm field that doesn't match
 
 ## To do - features/usability
+- "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - "Report problem"/"contact site owner" button, view with form that emails me
 - Let user reset password. reset_tokens model with random token and user ID. Email user token, if they can provide token to web site then they can reset password.
 - Learn user's time zone and show timestamps in it
@@ -50,5 +59,9 @@ I have a minimum functional prototype. What now?
 - How to handle "probable" but not exact matches? Match percentage?
 
 ## Ideas
+- Limit # of monitors
+- Monitors are tripped and then must be reset, like a circuit breaker
+- Store the last few screenshots
 - "URL" field in "Your Monitors" table of dashboard should be shortened to "site" which only shows domain
 - Privacy policy and terms of use. Do we snoop on your monitors or not?
+- Monitor someone's twitter feed every time they tweet, if they delete a tweet we still have it

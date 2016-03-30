@@ -9,6 +9,7 @@
                 {{ form.hidden_tag() }}
                 <p>{{ render_field(form.email, class="u-full-width") }}</p>
                 <p>{{ render_field(form.password, class="u-full-width") }}</p>
+                <a href="{{ url_for('reset_password_request') }}" class="button">Reset Password</a>
                 <span class="u-pull-right"><input type="submit" value="Log in" class="button-primary" /></span>
             </div>
         </div>

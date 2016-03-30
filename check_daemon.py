@@ -32,8 +32,13 @@ def get_page(url):
     r = requests.get(splash_endpoint + "/render.json", params=params)
     resp_dict = r.json()
     html = resp_dict.get('html')
-    image = base64.b64decode(resp_dict.get('jpeg'))
-    text = get_text_from_html(html)
+    try:
+        image = base64.b64decode(resp_dict.get('jpeg'))
+        text = get_text_from_html(html)
+    except TypeError:
+        # TODO log error or handle this better
+        text = None
+        image = None
     return text, image
 
 

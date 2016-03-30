@@ -5,8 +5,11 @@
 {% endblock %}
 {% block body %}
     <h2>Status</h2>
-    <p><strong>{{ monitor.state | friendly_state }}</strong> since {{ events[0].timestamp | human_elapsed_time }} ago<br />
-    Last check {{ checks[0].timestamp | human_elapsed_time }} ago</p>
+    <p><strong>{{ monitor.state | friendly_state }}</strong><br />
+        {% if events %}
+            Since {{ events[0].timestamp | human_elapsed_time }} ago<br />
+            Last check {{ checks[0].timestamp | human_elapsed_time }} ago</p>
+        {% endif %}
     <h2>Info</h2>
     <p>Description: {{ monitor.description }}</p>
     <p>URL: {{ monitor.url }}</p>

@@ -46,6 +46,21 @@ class User(db.Model):
         return self.id
 
 
+class PasswordResetToken(db.Model):
+    """Stores tokens used to authenticate users for a password reset."""
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', backref=db.backref('reset_tokens', lazy='dynamic'))
+    token = db.Column(db.String)
+
+    def __init__(self, user_id, token):
+        self.user_id = user_id
+        self.token = token
+
+    def __repr__(self):
+        return "<Password reset token for user ID %s>" % self.user_id
+
+
 class Monitor(db.Model):
     """Monitor object. Belongs to a user, knows a URL and a string of text to look for at that URL"""
 
@@ -100,7 +115,7 @@ class Check(db.Model):
     changed = db.Column(db.Boolean)
     screenshot = db.Column(db.LargeBinary)
 
-    def __init__(self, monitor_id, result, screenshot, timestamp=None):
+    def __init__(self, monitor_id, result, screenshot=None, timestamp=None):
         self.monitor_id = monitor_id
         self.user_id = Monitor.query.filter_by(id=monitor_id).one().user_id
         self.result = result

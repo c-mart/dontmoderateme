@@ -9,6 +9,8 @@ from sqlalchemy.orm.exc import NoResultFound
 import base64
 from datetime import datetime
 import humanize
+import os
+
 
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
@@ -22,6 +24,18 @@ def send_activation_email(user):
                              html=html_body)
     mail.send(msg)
 
+
+def send_password_reset_email(email_addr, token):
+    """Sends password reset email including passed token_string to passed email_addr."""
+    reset_url = url_for('reset_password', token=token, _external=True)
+    body = "Please visit this page to reset your password: %s" % reset_url
+    html_body = "Please click this link to reset your password: <a href=\"{0}\">{0}</a>".format(reset_url)
+    msg = flask_mail.Message(subject="Reset your password on Don't Moderate Me",
+                             sender="notify@dontmoderate.me",
+                             recipients=[email_addr],
+                             body=body,
+                             html=html_body)
+    mail.send(msg)
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -61,6 +75,7 @@ def register():
             return render_template('activate.html')
         else:
             # Validation failed, tell user to fix their input
+            flash('There was a problem with the information you entered, please see below.')
             return render_template('register.html', form=form)
 
 
@@ -113,6 +128,36 @@ def logout():
     flask_login.logout_user()
     flash('You are logged out.')
     return redirect(url_for('home'))
+
+
+@app.route('/reset-password-request', methods=['GET', 'POST'])
+def reset_password_request():
+    form = forms.ResetPasswordRequestForm()
+    if request.method == 'GET':
+        return render_template('reset_password_request.html', form=form)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            user = models.User.query.filter_by(email=form.email.data).first()
+            if user:
+                token = base64.urlsafe_b64encode(os.urandom(16))
+                token_record = models.PasswordResetToken(user.id, token)
+                models.db.session.add(token_record)
+                models.db.session.commit()
+                send_password_reset_email(form.email.data, token)
+                flash('Password reset email sent! Please check your inbox or spam folder for a password reset link.')
+                return render_template('reset_password_request.html', form=form)
+            else:
+                flash('No account with that email address. Please try again or register a new account.')
+                return render_template('reset_password_request.html', form=form)
+        else:
+            # Form input validation failed, re-present form with error messages
+            return render_template('reset_password_request.html', form=form)
+
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Authenticate password reset request and allow user to reset password."""
+    # TODO me
 
 
 @flask_login.login_required
