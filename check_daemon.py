@@ -8,6 +8,8 @@ import time
 import base64
 import flask_mail
 from sqlalchemy.orm import joinedload
+import logging
+import logging.handlers
 
 """
 check_daemon runs in the background. It periodically queries for monitors that are stale (due to be checked) according to configured check_interval. For each stale monitor, a check is performed by making an API call to a Splash instance. HTML and a JPEG image are requested for each check. Text is extracted from HTML and searched for text specified in the monitor. If this returns a match then check returns True, else False.
@@ -15,9 +17,43 @@ check_daemon runs in the background. It periodically queries for monitors that a
 From the results of each check, a new Check object is created. The Check model handles logic of whether the current check differs from the last one. If it differs then the image is stored in the database, and the user is sent a notification email indicating that their monitor is up/down. If it does not differ then then the image is not stored in the database.
 """
 
+# Configuration, currently separate from app configuration, should we fix this?
+
 splash_endpoint = 'http://localhost:8050'  # Splash container
 check_interval = timedelta(seconds=60)  # timedelta object specifying how often each monitor should be checked
 daemon_wakeup_interval = 60  # Time in seconds specifying how often check_daemon should wake up and perform checks
+# TODO change this to use DMM config vars
+log_file = '/tmp/check-daemon-log'
+MAIL_SERVER = 'smtp.west.cox.net'
+
+# Logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG) # Change this to "INFO" or "DEBUG"
+log_file_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+log_file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=20000000, backupCount=10)
+log_file_handler.setFormatter(log_file_formatter)
+logger.addHandler(log_file_handler)
+
+smtp_handler = logging.handlers.SMTPHandler(mailhost=MAIL_SERVER,
+                                            fromaddr='check-daemon-errors@dontmoderate.me',
+                                            toaddrs=['chris@c-mart.in'],
+                                            subject='check_daemon errors')
+smtp_handler.setLevel(logging.ERROR)
+log_email_formatter = logging.Formatter('''
+Message type:       %(levelname)s
+Location:           %(pathname)s:%(lineno)d
+Module:             %(module)s
+Function:           %(funcName)s
+Server time:        %(asctime)s
+
+Message:
+
+%(message)s
+''')
+smtp_handler.setFormatter(log_email_formatter)
+logger.addHandler(smtp_handler)
+
 
 def get_text_from_html(html):
     """Extract and return text from HTML"""
@@ -69,15 +105,19 @@ def send_notification_email(check_id):
                                  html=html_body)
         mail.send(msg)
 
-while True:
-    stale_time = datetime.utcnow() - check_interval  # Time at which we consider a monitor to be stale
-    stale_monitors = models.Monitor.query.filter(models.Monitor.last_check_time < stale_time).all()
-    db.session.expunge_all()
-    for monitor in stale_monitors:
-        new_check = models.Check(monitor.id, *check(monitor.url, monitor.text))
-        changed = new_check.changed
-        db.session.add(new_check)
-        db.session.commit()
-        if changed is True:
-            send_notification_email(new_check.id)
-    time.sleep(daemon_wakeup_interval)
+if __name__ == '__main__':
+    while True:
+        try:
+            stale_time = datetime.utcnow() - check_interval  # Time at which we consider a monitor to be stale
+            stale_monitors = models.Monitor.query.filter(models.Monitor.last_check_time < stale_time).all()
+            db.session.expunge_all()
+            for monitor in stale_monitors:
+                new_check = models.Check(monitor.id, *check(monitor.url, monitor.text))
+                changed = new_check.changed
+                db.session.add(new_check)
+                db.session.commit()
+                if changed is True:
+                    send_notification_email(new_check.id)
+        except Exception as exception:
+            logger.critical(exception, exc_info=True)
+        time.sleep(daemon_wakeup_interval)

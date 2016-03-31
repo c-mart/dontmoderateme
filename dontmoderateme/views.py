@@ -265,7 +265,8 @@ def edit_monitor(monitor_id):
 def delete_monitor(monitor_id):
     """Delete a monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
-    models.db.session.delete(monitor)
+    checks = monitor.checks
+    models.db.session.delete(monitor, checks)
     models.db.session.commit()
     flash('Monitor has been deleted.')
     return redirect(url_for('dashboard'))
