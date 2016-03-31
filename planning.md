@@ -4,9 +4,6 @@ I have a minimum functional prototype. What now?
 - Write tests
 - Deploy. We need four containers: flask app, check_daemon, splash, and postgres. Our config should live somewhere private. We also need to learn to use Docker Compose.
 
-- catch all exceptions in check daemon
-
-
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
 - Do we need to daemonize check_daemon if it will run in a docker container, or not?
@@ -35,12 +32,14 @@ I have a minimum functional prototype. What now?
 - How to deal with Splash loading 404 pages? Notify user page is missing?
 
 ## To do - security
+- Consider everything that application could send via email. Don't send anything sensitive via email.
 - Set captcha keys
 - Flask should send TLS-encrypted email if email server supports it
 - Splash should use HTTPS if the web server supports it
 - Don't let a user view another user's monitors, checks, or screenshots
 
 ## To do - refactor/cleanup
+- check_daemon logging should report full stack trace
 - Consider using http://pytest-flask.readthedocs.org/en/latest/features.html for tests
 - Remove dryscrape from project
 - Refactor "screenshot" to "image"
@@ -67,3 +66,4 @@ I have a minimum functional prototype. What now?
 - "URL" field in "Your Monitors" table of dashboard should be shortened to "site" which only shows domain
 - Privacy policy and terms of use. Do we snoop on your monitors or not?
 - Monitor someone's twitter feed every time they tweet, if they delete a tweet we still have it
+- Monitor can have a range of possible statuses rather than binary up/down which may be more informative to user, e.g. page not found, site is down, server not found. For now, binary up/down. Page is down if 404.

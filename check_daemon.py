@@ -21,7 +21,7 @@ From the results of each check, a new Check object is created. The Check model h
 
 splash_endpoint = 'http://localhost:8050'  # Splash container
 check_interval = timedelta(seconds=60)  # timedelta object specifying how often each monitor should be checked
-daemon_wakeup_interval = 60  # Time in seconds specifying how often check_daemon should wake up and perform checks
+daemon_wakeup_interval = 10  # Time in seconds specifying how often check_daemon should wake up and perform checks
 # TODO change this to use DMM config vars
 log_file = '/tmp/check-daemon-log'
 MAIL_SERVER = 'smtp.west.cox.net'
@@ -29,7 +29,7 @@ MAIL_SERVER = 'smtp.west.cox.net'
 # Logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # Change this to "INFO" or "DEBUG"
+logger.setLevel(logging.DEBUG)  # Change this to "INFO" or "DEBUG"
 log_file_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 log_file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=20000000, backupCount=10)
 log_file_handler.setFormatter(log_file_formatter)
@@ -52,7 +52,8 @@ Message:
 %(message)s
 ''')
 smtp_handler.setFormatter(log_email_formatter)
-logger.addHandler(smtp_handler)
+# TODO turn this back on
+# logger.addHandler(smtp_handler)
 
 
 def get_text_from_html(html):
@@ -72,9 +73,8 @@ def get_page(url):
         image = base64.b64decode(resp_dict.get('jpeg'))
         text = get_text_from_html(html)
     except TypeError:
-        # TODO log error or handle this better
-        text = None
         image = None
+        text = ''
     return text, image
 
 
@@ -103,6 +103,7 @@ def send_notification_email(check_id):
                                  recipients=[notify_check.user.email],
                                  body=body,
                                  html=html_body)
+        logger.info("Sending notification email to {0}".format(notify_check.user.email))
         mail.send(msg)
 
 if __name__ == '__main__':
@@ -112,11 +113,16 @@ if __name__ == '__main__':
             stale_monitors = models.Monitor.query.filter(models.Monitor.last_check_time < stale_time).all()
             db.session.expunge_all()
             for monitor in stale_monitors:
+                logger.info("Checking monitor ID {0}. Looking for text {1} on URL {2} ".format(monitor.id,
+                                                                                                monitor.text,
+                                                                                                monitor.url))
                 new_check = models.Check(monitor.id, *check(monitor.url, monitor.text))
                 changed = new_check.changed
+                logger.info("Adding new check {0} to database".format(new_check))
                 db.session.add(new_check)
                 db.session.commit()
                 if changed is True:
+                    logger.info("Monitor has changed state")
                     send_notification_email(new_check.id)
         except Exception as exception:
             logger.critical(exception, exc_info=True)

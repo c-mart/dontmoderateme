@@ -137,4 +137,4 @@ class Check(db.Model):
             self.screenshot = screenshot
 
     def __repr__(self):
-        return '<Check ' + str(self.result) + ' on ' + self.monitor.url + '>'
+        return '<Check ' + str(self.result) + ' for monitor ID ' + str(self.monitor_id) + ' on ' + str(self.timestamp) + '>'
