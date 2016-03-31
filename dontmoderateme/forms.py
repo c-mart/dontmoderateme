@@ -37,7 +37,18 @@ class MonitorForm(Form):
     description = StringField('Brief description')
     recaptcha = RecaptchaField('Are you a robot?')
 
+
 class ResetPasswordRequestForm(Form):
     email = StringField('Email Address',
                         default=None,
                         validators=[DataRequired(), Email()])
+
+
+class ResetPasswordForm(Form):
+    password = PasswordField('Enter new password',
+                             default=None,
+                             validators=[DataRequired(),
+                                         Length(min=8)])
+    confirm_password = PasswordField('Confirm Password',
+                                     validators=[EqualTo('password',
+                                                         message='Passwords must match')])

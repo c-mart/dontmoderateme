@@ -15,10 +15,13 @@ class User(db.Model):
     enabled = db.Column(db.Boolean)
     create_timestamp = db.Column(db.DateTime)
 
+    def set_password(self, password):
+        self.pw_hash = helpers.pw_hash(password, self.pw_salt)
+
     def __init__(self, email, password, enabled=True, activated=False):
         self.email = email
         self.pw_salt = urandom(16)
-        self.pw_hash = helpers.pw_hash(password, self.pw_salt)
+        self.set_password(password)
         self.enabled = enabled
         self.activated = activated
         self.create_date = datetime.utcnow()

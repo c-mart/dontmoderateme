@@ -1,3 +1,5 @@
+create_timestamp
+
 I have a minimum functional prototype. What now?
 - Write tests
 - Deploy. We need four containers: flask app, check_daemon, splash, and postgres. Our config should live somewhere private. We also need to learn to use Docker Compose.

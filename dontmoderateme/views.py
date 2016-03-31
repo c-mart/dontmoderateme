@@ -35,7 +35,9 @@ def send_password_reset_email(email_addr, token):
                              recipients=[email_addr],
                              body=body,
                              html=html_body)
+    print(reset_url)
     mail.send(msg)
+
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -116,6 +118,9 @@ def login():
                     else:
                         flash('You have not activated your account yet, please follow the link in the activation email.')
                         return render_template('activate.html')
+                else:
+                    flash('No active account with that email and password, try again.')
+                    return render_template('login.html', form=form)
         else:
             # Return form to user and tell them to fix their input
             return render_template('login.html', form=form)
@@ -132,18 +137,27 @@ def logout():
 
 @app.route('/reset-password-request', methods=['GET', 'POST'])
 def reset_password_request():
+    """Generate password reset token and send password reset email to user"""
     form = forms.ResetPasswordRequestForm()
+    if flask_login.current_user.is_authenticated is True:
+        flash("You're already logged in, log out to request a password reset.")
+        return redirect(url_for('home'))
     if request.method == 'GET':
         return render_template('reset_password_request.html', form=form)
     elif request.method == 'POST':
         if form.validate_on_submit():
             user = models.User.query.filter_by(email=form.email.data).first()
             if user:
-                token = base64.urlsafe_b64encode(os.urandom(16))
-                token_record = models.PasswordResetToken(user.id, token)
-                models.db.session.add(token_record)
-                models.db.session.commit()
-                send_password_reset_email(form.email.data, token)
+                # Re-use existing token if we have one, else generate new token and store in database
+                token_obj = models.PasswordResetToken.query.filter_by(user_id = user.id).first()
+                if token_obj:
+                    token = token_obj.token
+                else:
+                    token = base64.urlsafe_b64encode(os.urandom(16)).decode('ascii')
+                    token_obj = models.PasswordResetToken(user.id, token)
+                    models.db.session.add(token_obj)
+                    models.db.session.commit()
+                send_password_reset_email(user.email, token)
                 flash('Password reset email sent! Please check your inbox or spam folder for a password reset link.')
                 return render_template('reset_password_request.html', form=form)
             else:
@@ -156,8 +170,26 @@ def reset_password_request():
 
 @app.route('/reset-password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    """Authenticate password reset request and allow user to reset password."""
-    # TODO me
+    """Authenticate password reset request based on token provided and allow user to reset password."""
+    if flask_login.current_user.is_authenticated is True:
+        flash("You're already logged in, log out to reset your password.")
+        return redirect(url_for('home'))
+    form = forms.ResetPasswordForm()
+    token_obj = models.PasswordResetToken.query.filter_by(token=token).first_or_404()
+    user_id = token_obj.user_id
+    user = models.User.query.filter_by(id=user_id).first_or_404()
+    if request.method == 'GET':
+        return render_template('reset_password.html', form=form, token=token)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            user.set_password(form.password.data)
+            models.db.session.delete(token_obj)
+            models.db.session.commit()
+            flash("Your password has been reset, please log in with your new password.")
+            return redirect(url_for('login'))
+        else:
+            # Form input validation failed
+            return render_template('reset_password.html', form=form, token=token)
 
 
 @flask_login.login_required
