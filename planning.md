@@ -1,5 +1,6 @@
 create_timestamp
 
+
 I have a minimum functional prototype. What now?
 - Write tests
 - Deploy. We need four containers: flask app, check_daemon, splash, and postgres. Our config should live somewhere private. We also need to learn to use Docker Compose.
@@ -24,9 +25,9 @@ Password Reset
 - Creating account with password confirm field that doesn't match
 
 ## To do - features/usability
+- account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - "Report problem"/"contact site owner" button, view with form that emails me
-- Let user reset password. reset_tokens model with random token and user ID. Email user token, if they can provide token to web site then they can reset password.
 - Learn user's time zone and show timestamps in it
 - Immediately check monitor after creation
 - Automatically prepend "http://" or "https://" in form input for URL
@@ -53,6 +54,7 @@ Password Reset
 - Re-send activation email if user tries to log into an account that is not activated
 - Registration form should email the user their password salt (perhaps base64-encoded) and make them activate their account
 - Write a couple of views to CRUD monitors
+- Let user reset password. reset_tokens model with random token and user ID. Email user token, if they can provide token to web site then they can reset password.
 
 ## Extended Features
 - only accept strong passwords, perhaps use python-zxcvbn

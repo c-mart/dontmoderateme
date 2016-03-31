@@ -24,7 +24,7 @@ class User(db.Model):
         self.set_password(password)
         self.enabled = enabled
         self.activated = activated
-        self.create_date = datetime.utcnow()
+        self.create_timestamp = datetime.utcnow()
 
     def __repr__(self):
         return '<User %s>', self.email

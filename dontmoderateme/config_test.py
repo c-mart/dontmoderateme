@@ -3,3 +3,4 @@ SECRET_KEY = 'CHANGEME123'
 DEBUG = True
 TESTING = True
 RATELIMIT_ENABLED = False
+WTF_CSRF_ENABLED = False  # "WTF_" prefix apparently required here
