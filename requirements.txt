@@ -16,6 +16,7 @@ Jinja2
 limits
 Mako
 MarkupSafe
+psycopg2
 python-editor
 python-slugify
 pytest
