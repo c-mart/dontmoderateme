@@ -22,6 +22,7 @@ I have a minimum functional prototype. What now?
 - account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - "Report problem"/"contact site owner" button, view with form that emails me
+- Forward info@dontmoderate.me to me
 - Learn user's time zone and show timestamps in it
 - Immediately check monitor after creation
 - Automatically prepend "http://" or "https://" in form input for URL

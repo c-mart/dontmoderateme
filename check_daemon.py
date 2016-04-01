@@ -52,8 +52,7 @@ Message:
 %(message)s
 ''')
 smtp_handler.setFormatter(log_email_formatter)
-# TODO turn this back on
-# logger.addHandler(smtp_handler)
+logger.addHandler(smtp_handler)
 
 
 def get_text_from_html(html):
