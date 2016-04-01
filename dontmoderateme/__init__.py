@@ -6,6 +6,7 @@ import flask_mail
 
 app = Flask(__name__)
 app.config.from_object('dontmoderateme.config_default')
+app.config.from_envvar('DMM_CONFIG', silent=True)
 db = SQLAlchemy(app)
 
 login_manager = flask_login.LoginManager()
