@@ -10,6 +10,7 @@ Flask-Script
 Flask-SQLAlchemy
 Flask-Testing
 Flask-WTF
+gunicorn
 humanize
 itsdangerous
 Jinja2
