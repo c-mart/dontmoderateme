@@ -33,13 +33,15 @@ I have a minimum functional prototype. What now?
 - How to deal with Splash loading 404 pages? Notify user page is missing?
 
 ## To do - security
+- Publish a canary
+- Postfix should be configured to send TLS email
 - Consider everything that application could send via email. Don't send anything sensitive via email.
 - Set captcha keys
-- Flask should send TLS-encrypted email if email server supports it
 - Splash should use HTTPS if the web server supports it
 - Don't let a user view another user's monitors, checks, or screenshots
 
 ## To do - refactor/cleanup
+- testing should happen against a postresql database, prob running in a container
 - check_daemon logging should report full stack trace
 - Consider using http://pytest-flask.readthedocs.org/en/latest/features.html for tests
 - Remove dryscrape from project

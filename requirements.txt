@@ -11,6 +11,7 @@ Flask-SQLAlchemy
 Flask-Testing
 Flask-WTF
 gunicorn
+html5lib
 humanize
 itsdangerous
 Jinja2

@@ -18,13 +18,12 @@ From the results of each check, a new Check object is created. The Check model h
 """
 
 # Configuration, currently separate from app configuration, should we fix this?
-
 splash_endpoint = 'http://localhost:8050'  # Splash container
 check_interval = timedelta(seconds=60)  # timedelta object specifying how often each monitor should be checked
 daemon_wakeup_interval = 10  # Time in seconds specifying how often check_daemon should wake up and perform checks
 # TODO change this to use DMM config vars
-log_file = '/tmp/check-daemon-log'
-MAIL_SERVER = 'smtp.west.cox.net'
+log_file = '/var/log/check_daemon'
+MAIL_SERVER = 'localhost'
 
 # Logging
 
@@ -96,7 +95,8 @@ def send_notification_email(check_id):
         monitor_url = url_for('view_monitor', monitor_id=notify_check.monitor.id, _external=True)
         body = "See details and image of monitored web page at {0}".format(monitor_url)
         html_body = "See details and image of monitored web page <a href=\"{0}\">here</a>.".format(monitor_url)
-        msg = flask_mail.Message(subject="Monitor {0} for page {1}".format("Up" if notify_check.result is True else "Down",
+        msg = flask_mail.Message(subject="Monitor {0} for page {1}"
+                                 .format("Up" if notify_check.result is True else "Down",
                                                                            notify_check.monitor.description),
                                  sender="notify@dontmoderate.me",
                                  recipients=[notify_check.user.email],
