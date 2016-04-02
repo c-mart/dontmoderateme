@@ -199,7 +199,7 @@ def dashboard():
     monitors = models.Monitor.query.filter_by(user=flask_login.current_user).\
         order_by(models.Monitor.create_timestamp.desc()).all()
     checks = models.Check.query.filter_by(user=flask_login.current_user, changed=True).\
-        order_by(models.Check.timestamp.desc()).all()
+        order_by(models.Check.timestamp.desc()).limit(10).all()
     return render_template('dashboard.html', monitors=monitors, checks=checks)
 
 
@@ -209,7 +209,7 @@ def view_monitor(monitor_id):
     """View an existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
     checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
-        .order_by(models.Check.timestamp.desc()).all()
+        .order_by(models.Check.timestamp.desc()).limit(50).all()
     events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
         .order_by(models.Check.timestamp.desc()).all()
     return render_template('view_monitor.html', monitor=monitor, events=events, checks=checks)
