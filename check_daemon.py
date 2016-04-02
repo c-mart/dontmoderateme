@@ -17,24 +17,16 @@ check_daemon runs in the background. It periodically queries for monitors that a
 From the results of each check, a new Check object is created. The Check model handles logic of whether the current check differs from the last one. If it differs then the image is stored in the database, and the user is sent a notification email indicating that their monitor is up/down. If it does not differ then then the image is not stored in the database.
 """
 
-# Configuration, currently separate from app configuration, should we fix this?
-splash_endpoint = 'http://localhost:8050'  # Splash container
-check_interval = timedelta(seconds=60)  # timedelta object specifying how often each monitor should be checked
-daemon_wakeup_interval = 10  # Time in seconds specifying how often check_daemon should wake up and perform checks
-# TODO change this to use DMM config vars
-log_file = '/var/log/check_daemon'
-MAIL_SERVER = 'localhost'
-
 # Logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)  # Change this to "INFO" or "DEBUG"
 log_file_formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
-log_file_handler = logging.handlers.RotatingFileHandler(log_file, maxBytes=20000000, backupCount=10)
+log_file_handler = logging.handlers.RotatingFileHandler(app.config['CHECK_DAEMON_LOG_FILE'], maxBytes=20000000, backupCount=10)
 log_file_handler.setFormatter(log_file_formatter)
 logger.addHandler(log_file_handler)
 
-smtp_handler = logging.handlers.SMTPHandler(mailhost=MAIL_SERVER,
+smtp_handler = logging.handlers.SMTPHandler(mailhost=app.config['MAIL_SERVER'],
                                             fromaddr='check-daemon-errors@dontmoderate.me',
                                             toaddrs=['chris@c-mart.in'],
                                             subject='check_daemon errors')
@@ -64,7 +56,7 @@ def get_text_from_html(html):
 def get_page(url):
     """Get text and JPEG image of the web page at URL. Returns a tuple of text and binary image"""
     params = {'url': url, 'html': 1, 'jpeg': 1, 'render_all': 1, 'wait': 1}
-    r = requests.get(splash_endpoint + "/render.json", params=params)
+    r = requests.get(app.config['SPLASH_ENDPOINT'] + "/render.json", params=params)
     resp_dict = r.json()
     html = resp_dict.get('html')
     try:
@@ -108,7 +100,7 @@ def send_notification_email(check_id):
 if __name__ == '__main__':
     while True:
         try:
-            stale_time = datetime.utcnow() - check_interval  # Time at which we consider a monitor to be stale
+            stale_time = datetime.utcnow() - app.config['MONITOR_CHECK_INTERVAL']  # Time at which we consider a monitor to be stale
             stale_monitors = models.Monitor.query.filter(models.Monitor.last_check_time < stale_time).all()
             db.session.expunge_all()
             for monitor in stale_monitors:
@@ -125,4 +117,4 @@ if __name__ == '__main__':
                     send_notification_email(new_check.id)
         except Exception as exception:
             logger.critical(exception, exc_info=True)
-        time.sleep(daemon_wakeup_interval)
+        time.sleep(app.config['DAEMON_WAKEUP_INTERVAL'])
