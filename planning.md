@@ -1,13 +1,8 @@
-create_timestamp
-
 I have a minimum functional prototype. What now?
 - Write tests
-- Deploy. We need four containers: flask app, check_daemon, splash, and postgres. Our config should live somewhere private. We also need to learn to use Docker Compose.
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
-- Do we need to daemonize check_daemon if it will run in a docker container, or not?
-- Would it be smart or dumb to store large (hundreds of KB) base64-encoded images in database? Store images in database for now, move them somewhere else later. Switch to SQLAlchemy-imageattach?
 - Is HAR better than image?
 - What happens when someone feeds a malicious URL? Sandbox the renderer somehow? Use splash in a docker container that runs as a non-privileged user and is destroyed/re-created frequently?
 - Place sensitive stuff (like SECRET_KEY, recaptcha keys, and mail server) in environment variables?
@@ -19,6 +14,7 @@ I have a minimum functional prototype. What now?
 - Password reset workflow
 
 ## To do - features/usability
+- Get Gmail to not mark my messages as spam
 - account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - "Report problem"/"contact site owner" button, view with form that emails me
