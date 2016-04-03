@@ -1,6 +1,6 @@
 I have a minimum functional prototype. What now?
+- Database migrations, user settings with time zone
 - Write tests
-- Deleting monitors should delete checks, it does in test but not in production
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
@@ -15,14 +15,13 @@ I have a minimum functional prototype. What now?
 - Password reset workflow
 
 ## To do - features/usability
+- "Report problem"/"contact site owner" button, view with form that emails me
 - Get Gmail to not mark my messages as spam
 - account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
-- "Report problem"/"contact site owner" button, view with form that emails me
 - Forward info@dontmoderate.me to me
 - Learn user's time zone and show timestamps in it
 - Immediately check monitor after creation
-- Automatically prepend "http://" or "https://" in form input for URL
 - Fix recaptcha validation failure message "The response parameter is missing."
 - Don't show recaptcha on edit monitor page
 - Don't let user create a duplicate monitor
@@ -33,13 +32,11 @@ I have a minimum functional prototype. What now?
 - Publish a canary
 - Postfix should be configured to send TLS email
 - Consider everything that application could send via email. Don't send anything sensitive via email.
-- Set captcha keys
 - Splash should use HTTPS if the web server supports it
 - Don't let a user view another user's monitors, checks, or screenshots
 
 ## To do - refactor/cleanup
 - testing should happen against a postresql database, prob running in a container
-- check_daemon logging should report full stack trace
 - Consider using http://pytest-flask.readthedocs.org/en/latest/features.html for tests
 - Remove dryscrape from project
 - Refactor "screenshot" to "image"
@@ -52,6 +49,10 @@ I have a minimum functional prototype. What now?
 - Registration form should email the user their password salt (perhaps base64-encoded) and make them activate their account
 - Write a couple of views to CRUD monitors
 - Let user reset password. reset_tokens model with random token and user ID. Email user token, if they can provide token to web site then they can reset password.
+- Deleting monitors should delete checks, it does in test but not in production
+- Automatically prepend "http://" or "https://" in form input for URL
+- check_daemon logging should report full stack trace
+- Set captcha keys
 
 ## Extended Features
 - only accept strong passwords, perhaps use python-zxcvbn
