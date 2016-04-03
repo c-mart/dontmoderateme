@@ -10,8 +10,8 @@ import re
 @yield_fixture
 def app():
     """Set up each test: initialize test client and database, disable rate limiter, return test client."""
-    dontmoderateme.app.config.from_object('dontmoderateme.config_test')
     app = dontmoderateme.app
+    app.config.from_object('dontmoderateme.config_test')
     db.create_all()
     dontmoderateme.limiter.enabled = False
     yield app
@@ -30,7 +30,7 @@ def populate_db():
 def test_home_page(app):
     r = app.test_client().get('/')
     assert b"Get notified when your online posts are removed." in r.get_data()
-
+    
 
 class TestNewAccountWorkflow:
     """Tests new account registration, activation, and login process"""
