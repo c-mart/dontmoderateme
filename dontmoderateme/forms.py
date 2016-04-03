@@ -31,6 +31,7 @@ class RegistrationForm(Form):
 class MonitorForm(Form):
     """Create or update a monitor"""
     url = StringField('Which URL should we check?',
+                      default='http://',
                       validators=[DataRequired(),
                                   URL()])
     text = TextAreaField('What text should we look for?', validators=[DataRequired()])
