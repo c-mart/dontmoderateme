@@ -1,5 +1,6 @@
 I have a minimum functional prototype. What now?
 - Write tests
+- Internal server error when deleting monitor
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
