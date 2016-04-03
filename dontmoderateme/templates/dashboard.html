@@ -42,6 +42,6 @@
             {% endfor %}
         </table>
     {% else %}
-        <p>You have no monitors. Go create some monitors!</p>
+        <p>You have no monitors, go <a href="{{ url_for('create_monitor') }}">create one</a>!</p>
     {% endif %}
 {% endblock %}

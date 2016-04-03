@@ -15,7 +15,6 @@ I have a minimum functional prototype. What now?
 - Password reset workflow
 
 ## To do - features/usability
-- "Report problem"/"contact site owner" button, view with form that emails me
 - Get Gmail to not mark my messages as spam
 - account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
@@ -43,6 +42,7 @@ I have a minimum functional prototype. What now?
 - Implement logging for check_daemon
 
 ## Done
+- "Report problem"/"contact site owner" button, view with form that emails me
 - Email user when event occurs, include link to monitor
 - captcha on registration page
 - Re-send activation email if user tries to log into an account that is not activated

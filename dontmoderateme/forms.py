@@ -1,6 +1,6 @@
 from flask_wtf import Form, RecaptchaField
 from wtforms import StringField, PasswordField, TextAreaField
-from wtforms.validators import DataRequired, URL, Email, EqualTo, Length
+from wtforms.validators import DataRequired, URL, Email, EqualTo, Length, Optional
 
 
 class LoginForm(Form):
@@ -53,3 +53,8 @@ class ResetPasswordForm(Form):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[EqualTo('password',
                                                          message='Passwords must match')])
+
+
+class FeedbackForm(Form):
+    text = TextAreaField('Your Questions/Problems/Feedback', validators=[DataRequired()])
+    email = StringField("Email address, if you would like a response", validators=[Optional(), Email()])

@@ -35,7 +35,14 @@ def send_password_reset_email(email_addr, token):
                              recipients=[email_addr],
                              body=body,
                              html=html_body)
-    print(reset_url)
+    mail.send(msg)
+
+
+def send_feedback_email(text, sender_email):
+    msg = flask_mail.Message(subject="DMM user feedback from" + sender_email,
+                             sender="feedback@dontmoderate.me",
+                             recipients=[app.config['FEEDBACK_EMAIL']],
+                             body=text)
     mail.send(msg)
 
 
@@ -51,6 +58,24 @@ def user_loader(user_id):
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/feedback', methods=['GET', 'POST'])
+@limiter.limit('2/minute', methods=['POST'])
+def feedback():
+    """Collect feedback from user and send it"""
+    form = forms.FeedbackForm()
+    if request.method == 'GET':
+        return render_template('feedback.html', form=form)
+    elif request.method == 'POST':
+        if form.validate_on_submit():
+            send_feedback_email(form.text.data, form.email.data)
+            flash("We've got your message! If you provided an email address, we'll get back to you soon.")
+            return render_template('feedback.html', form=form)
+        else:
+            # Form validation failed, tell user to fix their input
+            flash("There was a problem with the information you entered, please see below")
+            return render_template('feedback.html', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])

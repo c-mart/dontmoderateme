@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% from "_helpers.html" import render_field %}
+{% block body %}
+    <h2>Contact Us</h2>
+
+    <form action="{{ url_for('feedback') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ render_field(form.text, class="u-full-width") }}</p>
+        <p>{{ render_field(form.email, class="u-full-width", placeholder="We promise not to spam you") }}<br />
+        <span class="u-pull-right"><input type="submit" value="Submit" class="button-primary" /></span>
+    </form>
+
+{% endblock %}

@@ -20,3 +20,5 @@ SPLASH_ENDPOINT = 'http://localhost:8050'  # Splash container
 MONITOR_CHECK_INTERVAL = timedelta(seconds=60)  # timedelta object specifying how often each monitor should be checked
 DAEMON_WAKEUP_INTERVAL = 10  # Time in seconds specifying how often check_daemon should wake up and perform checks
 CHECK_DAEMON_LOG_FILE = '/tmp/check_daemon'
+
+FEEDBACK_EMAIL = 'test@example.com'
