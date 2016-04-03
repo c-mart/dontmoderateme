@@ -39,7 +39,7 @@ def send_password_reset_email(email_addr, token):
 
 
 def send_feedback_email(text, sender_email):
-    msg = flask_mail.Message(subject="DMM user feedback from" + sender_email,
+    msg = flask_mail.Message(subject="DMM user feedback from " + sender_email,
                              sender="feedback@dontmoderate.me",
                              recipients=[app.config['FEEDBACK_EMAIL']],
                              body=text)
