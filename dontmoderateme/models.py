@@ -69,7 +69,7 @@ class Monitor(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', backref=db.backref('monitors', lazy='dynamic'))
+    user = db.relationship('User', backref=db.backref('monitors', lazy='dynamic', cascade='all, delete-orphan'))
     url = db.Column(db.String)
     text = db.Column(db.Text)
     description = db.Column(db.String)
@@ -112,7 +112,7 @@ class Check(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('checks', lazy='dynamic'))
     monitor_id = db.Column(db.Integer, db.ForeignKey('monitor.id'))
-    monitor = db.relationship('Monitor', backref=db.backref('checks', lazy='dynamic'))
+    monitor = db.relationship('Monitor', backref=db.backref('checks', lazy='dynamic', cascade='all, delete-orphan'))
     result = db.Column(db.Boolean)
     timestamp = db.Column(db.DateTime)
     changed = db.Column(db.Boolean)
