@@ -30,7 +30,8 @@
                 <li class="right-nav-li"><p>Logged in as {{ current_user.email }}</p></li>
             {% else %}
                 <li class="left-nav-li"><a href="{{ url_for('home') }}">Home</a></li>
-                <li class="left-nav-li"><a href="{{ url_for('faq') }}">FAQ</a></li>
+                <li class="left-nav-li"><a href="{{ url_for('faq') }}">FAQ</
+                    a></li>
                 <li class="left-nav-li"><a href="{{ url_for('feedback') }}">Contact</a></li>
                 <li class="left-nav-li"><a href="{{ url_for('about') }}">About</a></li>
                 <li class="right-nav-li"><a href="{{ url_for('login') }}"><strong>Login</strong></a></li>
