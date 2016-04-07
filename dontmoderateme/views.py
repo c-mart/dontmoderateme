@@ -64,6 +64,11 @@ def home():
 def about():
     return render_template('about.html')
 
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
 @app.route('/feedback', methods=['GET', 'POST'])
 @limiter.limit('2/minute', methods=['POST'])
 def feedback():
