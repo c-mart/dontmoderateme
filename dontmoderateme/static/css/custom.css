@@ -84,6 +84,11 @@ a { text-decoration: none; }
     margin-bottom: 1rem;
 }
 
+.signup-button {
+    font-size: 2rem;
+    text-transform: none;
+}
+
 /* Navigation */
 
 .top-nav ul {
