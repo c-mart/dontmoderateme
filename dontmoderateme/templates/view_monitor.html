@@ -1,44 +1,72 @@
 {% extends 'layout.html' %}
 {% from "_helpers.html" import render_field %}
 {% block title %}
-<h1>View Monitor</h1>
+<h1>Monitor: {{ monitor.description }}</h1>
 {% endblock %}
 {% block body %}
-    <h2>Status</h2>
-    <p><strong>{{ monitor.state | friendly_state }}</strong><br />
-        {% if events %}
-            Since {{ events[0].timestamp | human_elapsed_time }} ago<br />
-            Last check {{ checks[0].timestamp | human_elapsed_time }} ago</p>
-        {% endif %}
-    <h2>Info</h2>
-    <p>Description: {{ monitor.description }}</p>
-    <p>URL: {{ monitor.url }}</p>
-    <p>Text: {{ monitor.text }}</p>
-    <p>
-        <a href="{{ url_for('edit_monitor', monitor_id = monitor.id) }}" class="button">Edit Monitor</a>
-        <a href="{{ url_for('delete_monitor', monitor_id = monitor.id) }}" class="button">Delete Monitor</a>
-    </p>
-    <h2>Events</h2>
-    <table>
-        <tr>
-            <th>Date and Time</th>
-            <th>Status</th>
-            <th>Image</th>
-        </tr>
-        {% for event in events %}
-            <tr>
-                <td>{{ event.timestamp | localized_time }}</td>
-                <td>{{ event.result | friendly_state }}</td>
-                <td><a href="{{ url_for('view_event_image', check_id=event.id) }}">View</a></td>
-            </tr>
-        {% endfor %}
-        <tr>
-            <td>{{ monitor.create_timestamp | localized_time }}</td>
-            <td>Monitor Created</td>
-            <td></td>
-        </tr>
-    </table>
-
+    <div class="row">
+        <div class="four columns">
+            <h2>Status</h2>
+            <p><strong>{{ monitor.state | friendly_state }}</strong><br />
+                {% if recent_events %}
+                    Since {{ recent_events[0].timestamp | human_elapsed_time }} ago<br />
+                    Last check {{ checks[0].timestamp | human_elapsed_time }} ago</p>
+                {% endif %}
+            <p>
+                <a href="{{ url_for('edit_monitor', monitor_id = monitor.id) }}" class="button u-full-width">Edit Monitor</a>
+                <a href="{{ url_for('delete_monitor', monitor_id = monitor.id) }}" class="button u-full-width">Delete Monitor</a>
+            </p>
+        </div>
+        <div class="eight columns">
+            <h2>Recent Events</h2>
+            <table>
+                <tr>
+                    <th>Date and Time</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                </tr>
+                {% for event in recent_events %}
+                    <tr>
+                        <td>{{ event.timestamp | localized_time }}</td>
+                        <td>{{ event.result | friendly_state }}</td>
+                        <td><a href="{{ url_for('view_event_image', check_id=event.id) }}">View image</a></td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>{{ monitor.create_timestamp | localized_time }}</td>
+                    <td>Monitor Created</td>
+                    <td></td>
+                </tr>
+            </table>
+            View all events and checks
+        </div>
+    </div>
+    <h2>Monitor Details</h2>
+    <div class="row">
+        <div class="two columns">
+            <h4>Description</h4>
+        </div>
+        <div class="ten columns">
+            {{ monitor.description }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns">
+            <h4>URL</h4>
+        </div>
+        <div class="ten columns">
+            {{ monitor.url }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns">
+            <h4>Text</h4>
+        </div>
+        <div class="ten columns">
+            {{ monitor.text }}
+        </div>
+    </div>
+    <!--
     <h2>Recent Checks</h2>
     <table>
         <tr>
@@ -52,4 +80,5 @@
             </tr>
         {% endfor %}
     </table>
+    -->
 {% endblock %}

@@ -182,12 +182,13 @@ a { text-decoration: none; }
 }
 
 .footer {
+    margin-top: 4rem;
     color: #888888;
     text-align: center;
 }
 
-table {
-    margin-bottom: 4rem;
+th {
+    padding-top: 0rem;
 }
 
 .form-error {

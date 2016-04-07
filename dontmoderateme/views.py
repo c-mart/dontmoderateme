@@ -243,10 +243,10 @@ def view_monitor(monitor_id):
     """View an existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
     checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
-        .order_by(models.Check.timestamp.desc()).limit(50).all()
-    events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
-        .order_by(models.Check.timestamp.desc()).all()
-    return render_template('view_monitor.html', monitor=monitor, events=events, checks=checks)
+        .order_by(models.Check.timestamp.desc()).limit(10).all()
+    recent_events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
+        .order_by(models.Check.timestamp.desc()).limit(5).all()
+    return render_template('view_monitor.html', monitor=monitor, recent_events=recent_events, checks=checks)
 
 
 @flask_login.login_required
