@@ -6,16 +6,8 @@ I need pretty up/down icons
 ## Deploy Concerns
 Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
 
-User settings: time zone
-- view to display and update user settings
-- default settings when a user is created
-- new table for this or update existing user model?
 
-I have a minimum functional prototype. What now?
-- Database migrations, user settings with time zone
 - Write tests
-
-Switching from SQLite to PostgreSQL made my tests work again!
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
