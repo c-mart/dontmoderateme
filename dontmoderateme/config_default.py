@@ -6,7 +6,8 @@ These are example configuration values. Change them to something different for u
 
 SERVER_NAME = '127.0.0.1:5000'
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/dontmoderateme.sqlite'
+# SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/dontmoderateme.sqlite'
+SQLALCHEMY_DATABASE_URI = 'postgresql://dmm-dev:changeme123@localhost/dmm-dev'
 SECRET_KEY = 'CHANGEME123'
 RATELIMIT_ENABLED = True
 

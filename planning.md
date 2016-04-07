@@ -1,6 +1,22 @@
+Piwik not working. Fix piwik
+
+User settings: time zone
+- view to display and update user settings
+- default settings when a user is created
+- new table for this or update existing user model?
+- database migrations. Run Post
+
 I have a minimum functional prototype. What now?
 - Database migrations, user settings with time zone
 - Write tests
+
+Switching from SQLite to PostgreSQL made my tests work again!
+
+To run Postgres and Splash in containers:
+`docker run --name dmm-dev-postgres -e POSTGRES_USER=dmm-dev -e POSTGRES_PASSWORD=changeme123 -p 127.0.0.1:5432:5432 -d postgres:9.4`
+`docker run --name dmm-test-postgres -e POSTGRES_USER=dmm-test -e POSTGRES_PASSWORD=changeme123 -p 127.0.0.1:5433:5432 -d postgres:9.4`
+`docker run -p 5023:5023 -p 8050:8050 -p 8051:8051 -d scrapinghub/splash`
+-d is optional, runs container detached
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
@@ -15,7 +31,9 @@ I have a minimum functional prototype. What now?
 - Password reset workflow
 
 ## To do - features/usability
+- Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.
 - Get Gmail to not mark my messages as spam
+- "Monitor edited" should be an event?
 - account settings page so we can set time zone and change our own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - Forward info@dontmoderate.me to me
