@@ -21,22 +21,19 @@
     <h2>Events</h2>
     <table>
         <tr>
-            <th>Date</th>
-            <th>Time</th>
+            <th>Date and Time</th>
             <th>Status</th>
             <th>Image</th>
         </tr>
         {% for event in events %}
             <tr>
-                <td>{{ event.timestamp.strftime('%Y-%m-%d') }}</td>
-                <td>{{ event.timestamp.strftime('%H:%M') }} UTC</td>
+                <td>{{ event.timestamp | localized_time }}</td>
                 <td>{{ event.result | friendly_state }}</td>
                 <td><a href="{{ url_for('view_event_image', check_id=event.id) }}">View</a></td>
             </tr>
         {% endfor %}
         <tr>
-            <td>{{ monitor.create_timestamp.strftime('%Y-%m-%d') }}</td>
-            <td>{{ monitor.create_timestamp.strftime('%H:%M') }} UTC</td>
+            <td>{{ monitor.create_timestamp | localized_time }}</td>
             <td>Monitor Created</td>
             <td></td>
         </tr>
@@ -45,14 +42,12 @@
     <h2>Recent Checks</h2>
     <table>
         <tr>
-            <th>Date</th>
-            <th>Time</th>
+            <th>Date and Time</th>
             <th>Status</th>
         </tr>
         {% for check in checks %}
             <tr>
-                <td>{{ check.timestamp.strftime('%Y-%m-%d') }}</td>
-                <td>{{ check.timestamp.strftime('%H:%M') }} UTC</td>
+                <td>{{ check.timestamp | localized_time }}</td>
                 <td>{{ check.result | friendly_state }}</td>
             </tr>
         {% endfor %}

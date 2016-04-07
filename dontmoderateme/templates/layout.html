@@ -5,26 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Don't Moderate Me</title>
     {% block head %}{% endblock %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='dark-tango-skeleton.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}" />
-    <!-- Piwik -->
-    <script type="text/javascript">
-      var _paq = _paq || [];
-      _paq.push(["setDomains", ["*.dontmoderate.me"]]);
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//piwik.c-mart.in/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', 2]);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
-    <noscript><p><img src="//piwik.c-mart.in/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
-    <!-- End Piwik Code -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-tango-skeleton.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
 </head>
 <body>
     <div class="top-nav">
@@ -61,10 +46,32 @@
         {% for message in get_flashed_messages() %}
             <div class='flash'>{{ message | safe }}</div>
         {% endfor %}
+        <noscript>
+            <div class='flash'>
+                You don't have JavaScript enabled.<br />
+                We'll try to accommodate you but some things may not work right.
+            </div>
+        </noscript>
         <div class="row">
             {% block body %}{% endblock %}
         </div>
         <div class="footer">Copyright 2016 Don't Moderate Me.</div>
     </div>
 </body>
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["setDomains", ["*.dontmoderate.me"]]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//piwik.c-mart.in/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 2]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//piwik.c-mart.in/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
 </html>

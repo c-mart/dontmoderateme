@@ -10,6 +10,7 @@ import base64
 from datetime import datetime
 import humanize
 import os
+from jinja2 import Markup
 
 
 def send_activation_email(user):
@@ -311,7 +312,7 @@ def rate_limit_exceeded_handler(e):
     flash('You have tried doing that too often. Please wait a minute before trying again.')
     return make_response(redirect(request.referrer))
 
-# Jinja2 display filters
+# Jinja2 display filters - perhaps these should go in their own module
 
 
 @app.template_filter('friendly_state')
@@ -329,3 +330,12 @@ def friendly_state(state):
 def human_elapsed_time(timestamp):
     """Returns human-friendly text for time elapsed since timestamp"""
     return humanize.naturaldelta(datetime.utcnow() - timestamp)
+
+
+@app.template_filter('localized_time')
+def localized_time(timestamp):
+    """Returns a localized timestamp using moment.js"""
+    return Markup("<script>document.write(moment(\"%s\").format('%s'));</script><noscript>%s</noscript>"
+                  % (timestamp.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                     'LLL',
+                     timestamp.strftime('%Y-%m-%d %H:%M') + ' UTC'))

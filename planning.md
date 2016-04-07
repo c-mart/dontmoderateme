@@ -1,22 +1,21 @@
 Piwik not working. Fix piwik
 
+Flash message if JavaScript is disabled, "shit will sorta work but not as well"
+I need pretty up/down icons
+
+## Deploy Concerns
+Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
+
 User settings: time zone
 - view to display and update user settings
 - default settings when a user is created
 - new table for this or update existing user model?
-- database migrations. Run Post
 
 I have a minimum functional prototype. What now?
 - Database migrations, user settings with time zone
 - Write tests
 
 Switching from SQLite to PostgreSQL made my tests work again!
-
-To run Postgres and Splash in containers:
-`docker run --name dmm-dev-postgres -e POSTGRES_USER=dmm-dev -e POSTGRES_PASSWORD=changeme123 -p 127.0.0.1:5432:5432 -d postgres:9.4`
-`docker run --name dmm-test-postgres -e POSTGRES_USER=dmm-test -e POSTGRES_PASSWORD=changeme123 -p 127.0.0.1:5433:5432 -d postgres:9.4`
-`docker run -p 5023:5023 -p 8050:8050 -p 8051:8051 -d scrapinghub/splash`
--d is optional, runs container detached
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
@@ -53,13 +52,14 @@ To run Postgres and Splash in containers:
 - Don't let a user view another user's monitors, checks, or screenshots
 
 ## To do - refactor/cleanup
-- testing should happen against a postresql database, prob running in a container
 - Consider using http://pytest-flask.readthedocs.org/en/latest/features.html for tests
 - Remove dryscrape from project
 - Refactor "screenshot" to "image"
 - Implement logging for check_daemon
+- One PostgreSQL container for both dev and testing databases
 
 ## Done
+- testing should happen against a postresql database, prob running in a container
 - "Report problem"/"contact site owner" button, view with form that emails me
 - Email user when event occurs, include link to monitor
 - captcha on registration page

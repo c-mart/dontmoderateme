@@ -18,7 +18,7 @@
                     <td>{{ check.timestamp | human_elapsed_time }} ago</td>
                     <td><a href="{{ url_for('view_monitor', monitor_id=check.monitor.id) }}">{{ check.monitor.description }}</a></td>
                     <td>{{ check.result | friendly_state }}</td>
-                    <td><a href="{{ url_for('view_event_image', check_id=check.id) }}">View</a></td>
+                    <td><a href="{{ url_for('view_event_image', check_id=check.id) }}">view image</a></td>
                 </tr>
             {% endfor %}
         </table>
