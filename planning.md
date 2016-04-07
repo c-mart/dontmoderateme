@@ -1,5 +1,7 @@
 Piwik not working. Fix piwik
 
+Restrict number of monitors user can create
+
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
 - Try getting pytest-flask to work
@@ -8,7 +10,6 @@ Testing options:
 ## Deploy Concerns
 Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
 
-- Write tests
 
 ## Design concerns
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
@@ -23,6 +24,7 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - Password reset workflow
 
 ## To do - features/usability
+- View all events and checks
 - Get Gmail to not mark my messages as spam
 - "Monitor edited" should be an event?
 - Let users change their own password
