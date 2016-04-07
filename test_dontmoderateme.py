@@ -19,7 +19,6 @@ def app():
     db.drop_all()
 
 
-@fixture
 def populate_db():
     """Populate database with a test user"""
     testuser = models.User('test@test.com', 'testtest', activated=True)
@@ -67,9 +66,25 @@ class TestNewAccountWorkflow:
         assert b"Logged in as testy@mctester.son" in r.get_data(), "Should be able to log in as new account"
 
 
-def test_login(app, populate_db):
+def test_login(app):
+    populate_db()
     r = app.test_client().post('/login', follow_redirects=True, data=dict(email='test@test.com', password='testtest'))
     assert b"Logged in as test@test.com" in r.get_data(), "Should see logged in notice"
+
+
+def test_create_monitor(app):
+    populate_db()
+    test_client = app.test_client()
+    test_client.post('/login', follow_redirects=True, data=dict(email='test@test.com', password='testtest'))
+    r = test_client.post('/create-monitor',
+                                   follow_redirects=True,
+                                   data=dict(url='https://example.com',
+                                             text='test text',
+                                             description='test monitor description'))
+    assert b"Monitor created successfully" in r.get_data(), "Should see new monitor"
+    assert b"Description: test monitor description" in r.get_data(), "Should see description of our new monitor"
+    assert b"URL: https://example.com" in r.get_data(), "Should see URL of our new monitor"
+    assert b"Text: test text" in r.get_data(), "Should see text of our new monitor"
 
 if __name__ == '__main__':
     pytest.main()

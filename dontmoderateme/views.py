@@ -60,6 +60,9 @@ def user_loader(user_id):
 def home():
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/feedback', methods=['GET', 'POST'])
 @limiter.limit('2/minute', methods=['POST'])
@@ -319,11 +322,11 @@ def rate_limit_exceeded_handler(e):
 def friendly_state(state):
     """Returns human-friendly text for state of monitor"""
     if state is None:
-        return "Check again soon"
+        return Markup("Check again in a minute")
     elif state is False:
-        return "Monitor Down"
+        return Markup("<img class=\"icon\" src=\"%s\" /> Down" % url_for('static', filename='icons/down-icon-16px.png'))
     elif state is True:
-        return "Monitor Up"
+        return Markup("<img class=\"icon\" src=\"%s\" /> Up" % url_for('static', filename='icons/up-icon-16px.png'))
 
 
 @app.template_filter('human_elapsed_time')

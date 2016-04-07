@@ -1,11 +1,12 @@
 Piwik not working. Fix piwik
 
-Flash message if JavaScript is disabled, "shit will sorta work but not as well"
-I need pretty up/down icons
+Testing options:
+- Continue trying to get pytest to work on my own. probably have trouble with application context and request context
+- Try getting pytest-flask to work
+- Switch back to unittest, which worked well for smog, also uses XUnit style applicable to other languages
 
 ## Deploy Concerns
 Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
-
 
 - Write tests
 
@@ -25,15 +26,11 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.
 - Get Gmail to not mark my messages as spam
 - "Monitor edited" should be an event?
-- account settings page so we can set time zone and change our own password
+- Let users change their own password
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
-- Forward info@dontmoderate.me to me
-- Learn user's time zone and show timestamps in it
 - Immediately check monitor after creation
 - Fix recaptcha validation failure message "The response parameter is missing."
-- Don't show recaptcha on edit monitor page
 - Don't let user create a duplicate monitor
-- "Check now" button places request at the front of the work queue (so we actually need a deque)
 - How to deal with Splash loading 404 pages? Notify user page is missing?
 
 ## To do - security
@@ -51,6 +48,8 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- Pretty up/down icons
+- Forward info@dontmoderate.me to me
 - testing should happen against a postresql database, prob running in a container
 - "Report problem"/"contact site owner" button, view with form that emails me
 - Email user when event occurs, include link to monitor
@@ -63,6 +62,7 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - Automatically prepend "http://" or "https://" in form input for URL
 - check_daemon logging should report full stack trace
 - Set captcha keys
+- Learn user's time zone and show timestamps in it
 
 ## Extended Features
 - only accept strong passwords, perhaps use python-zxcvbn

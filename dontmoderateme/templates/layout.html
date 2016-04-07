@@ -14,28 +14,25 @@
 <body>
     <div class="top-nav">
         <ul>
-            <li class="left-nav-li"><a href="{{ url_for('home') }}">Home</a></li>
             {% if current_user.is_authenticated %}
-                <li class="left-nav-li"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="left-nav-li"><a href="{{ url_for('dashboard') }}"><strong>Dashboard</strong></a></li>
                 <li class="left-nav-li"><a href="{{ url_for('create_monitor') }}">Create Monitor</a></li>
                 <li class="right-nav-li"><a href="{{ url_for('logout') }}">Log out</a></li>
-                <!-- Saving this! I'll need it soon enough.
                 <li class="dropdown right-nav-li">
-                    <a href="#" class="dropbtn">▼ Dropdown</a>
+                    <a href="#" class="dropbtn">▼ More</a>
                     <div class="dropdown-content">
-                        <a href="{{ url_for('home') }}">Uno</a>
-                        <a href="{{ url_for('home') }}">Dos</a>
-                        <a href="{{ url_for('home') }}">Tres</a>
-                        <a href="{{ url_for('home') }}">Catorce</a>
+                        <a href="{{ url_for('home') }}">Home</a>
+                        <a href="{{ url_for('feedback') }}">Feedback/Contact</a>
+                        <a href="{{ url_for('about') }}">About</a>
                     </div>
                 </li>
-                -->
-                <li class="right-nav-li"><a href="{{ url_for('feedback') }}">Contact Us</a></li>
                 <li class="right-nav-li"><p>Logged in as {{ current_user.email }}</p></li>
             {% else %}
+                <li class="left-nav-li"><a href="{{ url_for('home') }}">Home</a></li>
+                <li class="left-nav-li"><a href="{{ url_for('feedback') }}">Contact Us</a></li>
+                <li class="left-nav-li"><a href="{{ url_for('about') }}">About</a></li>
                 <li class="right-nav-li"><a href="{{ url_for('login') }}"><strong>Login</strong></a></li>
                 <li class="right-nav-li"><a href="{{ url_for('register') }}">Sign Up</a></li>
-                <li class="right-nav-li"><a href="{{ url_for('feedback') }}">Contact Us</a></li>
             {% endif %}
         </ul>
     </div>
