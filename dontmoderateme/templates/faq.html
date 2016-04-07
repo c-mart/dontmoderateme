@@ -6,19 +6,29 @@
     <p>Feel free to <a href="{{ url_for('feedback') }}">contact us</a> if your question is not answered below.</p>
     <p>
         <strong>What does it cost?</strong><br />
-        Don't Moderate Me is a free service. Eventually there may be paid options that add more functionality, but what you see now will always remain free.
+        Don't Moderate Me is a free service. Someday there may be paid options that add more functionality, but what you see now will remain free.
+    </p>
+    <p>
+        <strong>How many pages can I monitor?</strong><br />
+        Right now DMM allows each user to monitor 30 pages. This will change as the service grows and scales in capacity.
+    </p>
+    <p>
+        <strong>How quickly do I get notified?</strong><br />
+        DMM checks each monitor at least once each day, so you should get notified within 24 hours. These checks will become more frequent in the future.
     </p>
     <p>
         <strong>Why doesn't it work for private sites (like Facebook)?</strong><br />
         Don't Moderate Me cannot view private or restricted content that requires a login.
-        DMM doesn't know how to log into Facebook as you, and we don't want to collect your Facebook password!
-        This fits with the vision of DMM as a tool to provide transparency and accountability for public discussions online.
+        DMM doesn't know how to log into Facebook as you - we don't want to collect your Facebook password!
+        This fits with the vision of DMM as a tool to provide transparency and accountability for public discussions.
     </p>
     <p>
-        <strong>How secure is Don't Moderate Me? What is your privacy policy?</strong><br />
-        I am implementing best practices that enhance the security of Don't Moderate Me, but <a href="https://github.com/c-mart/dontmoderateme/blob/master/planning.md">work remains to be done</a>. Like any web-based service, DMM could be hacked or breached by a malicious party. Right now, DMM is a proof-of-concept that has never received an independent security assessment. Until that changes, please don't use DMM to monitor content that you REALLY don't want to ever be associated with the email or IP address that you present to us.<br />
-        <br />
-        That possibility aside, <strong>each DMM user is confidential, including their monitors and usage habits</strong>. The personally identifiable information that you provide to DMM will never be disclosed to a third party (to the extent permitted by law), only ever used to troubleshoot problems and improve the service.
+        <strong>How secure is Don't Moderate Me?</strong><br />
+        I am implementing best practices that enhance the security of Don't Moderate Me, but <a href="https://github.com/c-mart/dontmoderateme/blob/master/planning.md">work remains to be done</a>. Like any web-based service, DMM could be hacked or breached by a malicious party. Right now, DMM is a proof-of-concept that has never received an independent security assessment. Until that changes, please don't use DMM to monitor content that you cannot ever have publicly associated with the email or IP address that you use to access the service.
+    </p>
+    <p>
+        <strong>What is your privacy policy?</strong><br />
+        Aside from the security considerations above, <strong>each DMM user is considered confidential, including their monitors and usage habits</strong>. The personally identifiable information that you provide to DMM will never be disclosed to a third party (to the extent permitted by law), only ever used to troubleshoot problems and improve the service.
     </p>
 
 {% endblock %}

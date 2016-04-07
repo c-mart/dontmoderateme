@@ -1,17 +1,15 @@
-Piwik not working. Fix piwik
-
-Restrict number of monitors user can create
+- Piwik not working. Fix piwik
+- Restrict number of monitors user can create
+- View for all events and checks
+- Redesign dashboard
 
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
 - Try getting pytest-flask to work
 - Switch back to unittest, which worked well for smog, also uses XUnit style applicable to other languages
 
-## Deploy Concerns
-Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
-
-
 ## Design concerns
+- Deploy playbook should run database migration upgrade at the end to apply any schema changes (or should I do that manually?)
 - If user associated with a monitor is manually deleted from DB, or monitor associated with a check is deleted from DB, things go wrong. Delete all "child" objects when deleting user or monitor.
 - Is HAR better than image?
 - What happens when someone feeds a malicious URL? Sandbox the renderer somehow? Use splash in a docker container that runs as a non-privileged user and is destroyed/re-created frequently?
@@ -28,7 +26,6 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - Get Gmail to not mark my messages as spam
 - "Monitor edited" should be an event?
 - Let users change their own password
-- "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - Immediately check monitor after creation
 - Fix recaptcha validation failure message "The response parameter is missing."
 - Don't let user create a duplicate monitor
@@ -37,18 +34,18 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 ## To do - security
 - Publish a canary
 - Postfix should be configured to send TLS email
-- Consider everything that application could send via email. Don't send anything sensitive via email.
 - Splash should use HTTPS if the web server supports it
-- Don't let a user view another user's monitors, checks, or screenshots
+- Programatically enforce a user's ability to only view his/her own monitors, checks, screenshots
 
 ## To do - refactor/cleanup
 - Consider using http://pytest-flask.readthedocs.org/en/latest/features.html for tests
 - Remove dryscrape from project
 - Refactor "screenshot" to "image"
-- Implement logging for check_daemon
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- Implement logging for check_daemon
+- "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.
 - Pretty up/down icons
 - Forward info@dontmoderate.me to me

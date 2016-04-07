@@ -264,7 +264,7 @@ def create_monitor():
                                      description=form.description.data)
             models.db.session.add(monitor)
             models.db.session.commit()
-            flash('Monitor created successfully.')
+            flash('Monitor created successfully. To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list.')
             return redirect(url_for('view_monitor', monitor_id=monitor.id))
         else:
             # Validation failed, tell user to fix their input
