@@ -36,7 +36,7 @@ class MonitorForm(Form):
                                   URL()])
     text = TextAreaField('What text should we look for?', validators=[DataRequired()])
     description = StringField('Brief description')
-    recaptcha = RecaptchaField('Are you a robot?')
+    # recaptcha = RecaptchaField('Are you a robot?')
 
 
 class ResetPasswordRequestForm(Form):

@@ -23,7 +23,6 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - Password reset workflow
 
 ## To do - features/usability
-- Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.
 - Get Gmail to not mark my messages as spam
 - "Monitor edited" should be an event?
 - Let users change their own password
@@ -48,6 +47,7 @@ Deploy playbook should run database migration upgrade at the end to apply any sc
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.
 - Pretty up/down icons
 - Forward info@dontmoderate.me to me
 - testing should happen against a postresql database, prob running in a container
