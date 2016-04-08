@@ -253,6 +253,10 @@ def view_monitor(monitor_id):
 @app.route('/create-monitor', methods=['GET', 'POST'])
 def create_monitor():
     """Create a new monitor"""
+    monitor_count = models.Monitor.query.filter_by(user=flask_login.current_user).count()
+    if monitor_count >= app.config['USER_MAX_MONITORS']:
+        flash('You have already created the maximum number of monitors allowed per user. Please delete an existing monitor before adding another.')
+        return redirect(url_for('dashboard'))
     form = forms.MonitorForm()
     if request.method == 'GET':
         return render_template('create_edit_monitor.html', form=form)

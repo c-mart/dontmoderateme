@@ -23,3 +23,5 @@ DAEMON_WAKEUP_INTERVAL = 10  # Time in seconds specifying how often check_daemon
 CHECK_DAEMON_LOG_FILE = '/tmp/check_daemon'
 
 FEEDBACK_EMAIL = 'test@example.com'
+
+USER_MAX_MONITORS = 5  # Limit each user to this many monitors

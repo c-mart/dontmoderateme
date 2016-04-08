@@ -1,6 +1,6 @@
 - Piwik not working. Fix piwik
 - Restrict number of monitors user can create
-- View for all events and checks
+- View for all events and checks, either across all monitors or for a specific monitor
 - Redesign dashboard
 
 Testing options:
