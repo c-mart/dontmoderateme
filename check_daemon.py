@@ -99,9 +99,15 @@ def send_notification_email(check_id):
 
 if __name__ == '__main__':
     while True:
+        logger.debug("Waking up")
         try:
             stale_time = datetime.utcnow() - app.config['MONITOR_CHECK_INTERVAL']  # Time at which we consider a monitor to be stale
-            stale_monitors = models.Monitor.query.filter(models.Monitor.last_check_time < stale_time).all()
+            monitors = models.Monitor.query.all()
+            stale_monitors = []
+            for monitor in monitors:
+                if monitor.last_check_time < stale_time:
+                    stale_monitors.append(monitor)
+            logger.debug("Found {0} stale monitors".format(len(stale_monitors)))
             db.session.expunge_all()
             for monitor in stale_monitors:
                 logger.info("Checking monitor ID {0}. Looking for text {1} on URL {2} ".format(monitor.id,
@@ -117,4 +123,5 @@ if __name__ == '__main__':
                     send_notification_email(new_check.id)
         except Exception as exception:
             logger.critical(exception, exc_info=True)
+        logger.debug("Going to sleep")
         time.sleep(app.config['DAEMON_WAKEUP_INTERVAL'])

@@ -104,7 +104,6 @@ class Monitor(db.Model):
 
 
 
-
 class Check(db.Model):
     """Check object. Belongs to a monitor, indicates the results of a page load and result of match."""
 
