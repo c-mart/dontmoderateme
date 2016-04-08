@@ -1,5 +1,4 @@
 - Fix backup log file creation
-- Get Gmail to not mark my messages as spam, use TLS and dkim
 
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
@@ -20,6 +19,7 @@ Testing options:
 - Password reset workflow
 
 ## To do - features/usability
+- Will Gmail stop marking my messages as spam?
 - View all events and checks
 - "Monitor edited" should be an event.
 - Let users change their own password
@@ -30,7 +30,6 @@ Testing options:
 
 ## To do - security
 - Publish a canary
-- Postfix should be configured to send TLS email
 - Splash should use HTTPS if the web server supports it
 - Programatically enforce a user's ability to only view his/her own monitors, checks, screenshots
 
@@ -41,6 +40,8 @@ Testing options:
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- Postfix should be configured to send TLS email
+- Use TLS and dkim to send email
 - Piwik not working. Fix piwik
 - Check_daemon not checking new monitors very quickly
 - View for all events and checks, either across all monitors or for a specific monitor
