@@ -3,7 +3,26 @@
 <h1>Dashboard</h1>
 {% endblock %}
 {% block body %}
-    Welcome to Don't Moderate Me.
+    <p>Welcome to Don't Moderate Me. Click on a monitor description to view detailed status.</p>
+    <h2>Your Monitors</h2>
+    {% if monitors %}
+        <table>
+            <tr>
+                <th>Monitor</th>
+                <th>URL</th>
+                <th>Status</th>
+            </tr>
+            {% for monitor in monitors %}
+                <tr>
+                    <td><a href="{{ url_for('view_monitor', monitor_id=monitor.id) }}"><strong>{{ monitor.description }}</strong></a></td>
+                    <td>{{ monitor.url }}</td>
+                    <td>{{ monitor.state | friendly_state }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You have no monitors, go <a href="{{ url_for('create_monitor') }}">create one</a>!</p>
+    {% endif %}
     <h2>Recent Events</h2>
     {% if checks %}
         <table>
@@ -24,24 +43,5 @@
         </table>
     {% else %}
         <p>You have no recent events.</p>
-    {% endif %}
-    <h2>Your Monitors</h2>
-    {% if monitors %}
-        <table>
-            <tr>
-                <th>Monitor</th>
-                <th>URL</th>
-                <th>Status</th>
-            </tr>
-            {% for monitor in monitors %}
-                <tr>
-                    <td><a href="{{ url_for('view_monitor', monitor_id=monitor.id) }}"><strong>{{ monitor.description }}</strong></a></td>
-                    <td>{{ monitor.url }}</td>
-                    <td>{{ monitor.state | friendly_state }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>You have no monitors, go <a href="{{ url_for('create_monitor') }}">create one</a>!</p>
     {% endif %}
 {% endblock %}

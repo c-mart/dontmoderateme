@@ -1,7 +1,5 @@
 - Piwik not working. Fix piwik
-- Restrict number of monitors user can create
-- View for all events and checks, either across all monitors or for a specific monitor
-- Redesign dashboard
+- Check_daemon not checking new monitors very quickly
 
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
@@ -23,8 +21,8 @@ Testing options:
 
 ## To do - features/usability
 - View all events and checks
-- Get Gmail to not mark my messages as spam
-- "Monitor edited" should be an event?
+- "Monitor edited" should be an event.
+- Get Gmail to not mark my messages as spam, use TLS and dkim
 - Let users change their own password
 - Immediately check monitor after creation
 - Fix recaptcha validation failure message "The response parameter is missing."
@@ -44,6 +42,9 @@ Testing options:
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- View for all events and checks, either across all monitors or for a specific monitor
+- Redesign dashboard
+- Restrict number of monitors user can create
 - Implement logging for check_daemon
 - "To be sure that you receive notifications, add notify@dontmoderate.me to your trusted senders list."
 - Don't bother people with recaptcha when editing existing monitors or creating new ones. Add recaptcha back in if I have a spam/bot problem.

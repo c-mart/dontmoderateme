@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+{% from "_helpers.html" import render_field %}
+{% block title %}
+<h1>History for: {{ monitor.description }}</h1>
+{% endblock %}
+{% block body %}
+    <div class="row">
+        <p><a href="{{ url_for('view_monitor', monitor_id = monitor.id) }}">◀ Back to Monitor Overview</a></p>
+    </div>
+    <h2>Monitor Details</h2>
+    <div class="row">
+        <div class="two columns">
+            <h4>Description</h4>
+        </div>
+        <div class="ten columns">
+            {{ monitor.description }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns">
+            <h4>URL</h4>
+        </div>
+        <div class="ten columns">
+            {{ monitor.url }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns">
+            <h4>Text</h4>
+        </div>
+        <div class="ten columns">
+            <p>{{ monitor.text }}</p>
+        </div>
+    </div>
+
+    <h2>Detailed History</h2>
+    <p>(Note that an image is only saved when the status of a monitor changes.)</p>
+    <table>
+        <tr>
+            <th>Date and Time</th>
+            <th>Status</th>
+            <th>Image</th>
+        </tr>
+        {% for check in checks %}
+            <tr>
+                <td>{{ check.timestamp | localized_time }}</td>
+                <td>{{ check.result | friendly_state }}</td>
+                <td>{% if check.changed == True %}<a href="{{ url_for('view_event_image', check_id=check.id) }}">View image</a>{% endif %}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>{{ monitor.create_timestamp | localized_time }}</td>
+            <td>Monitor Created</td>
+            <td></td>
+        </tr>
+    </table>
+
+{% endblock %}

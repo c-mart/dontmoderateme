@@ -16,8 +16,10 @@ from jinja2 import Markup
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
     activation_url = url_for('activate', code=base64.urlsafe_b64encode(user.pw_salt), _external=True)
-    body = "Please visit this page to activate your account: %s" % activation_url
-    html_body = "Please click this link to activate your account: <a href=\"{0}\">{0}</a>".format(activation_url)
+    body = "You have registered for an account on dontmoderate.me. " \
+           "Please visit this URL to activate your account: %s" % activation_url
+    html_body = "You have registered for an account on dontmoderate.me. " \
+                "Please click this link to activate your account: <a href=\"{0}\">{0}</a>".format(activation_url)
     msg = flask_mail.Message(subject="Activate your account on Don't Moderate Me",
                              sender="activation@dontmoderate.me",
                              recipients=[user.email],
@@ -238,9 +240,9 @@ def dashboard():
 
 
 @flask_login.login_required
-@app.route('/view-monitor/<monitor_id>')
+@app.route('/monitor/<monitor_id>')
 def view_monitor(monitor_id):
-    """View an existing monitor"""
+    """Overview of an existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
     checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
         .order_by(models.Check.timestamp.desc()).limit(10).all()
@@ -248,6 +250,14 @@ def view_monitor(monitor_id):
         .order_by(models.Check.timestamp.desc()).limit(5).all()
     return render_template('view_monitor.html', monitor=monitor, recent_events=recent_events, checks=checks)
 
+@flask_login.login_required
+@app.route('/monitor-history/<monitor_id>')
+def view_monitor_history(monitor_id):
+    """Detailed history for a monitor showing all checks"""
+    monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
+    checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user) \
+        .order_by(models.Check.timestamp.desc()).all()
+    return render_template('view_monitor_history.html', monitor=monitor, checks=checks)
 
 @flask_login.login_required
 @app.route('/create-monitor', methods=['GET', 'POST'])
@@ -255,7 +265,7 @@ def create_monitor():
     """Create a new monitor"""
     monitor_count = models.Monitor.query.filter_by(user=flask_login.current_user).count()
     if monitor_count >= app.config['USER_MAX_MONITORS']:
-        flash('You have already created the maximum number of monitors allowed per user. Please delete an existing monitor before adding another.')
+        flash('You have already created the maximum number of monitors allowed per user. Please delete one of your existing monitors before adding another.')
         return redirect(url_for('dashboard'))
     form = forms.MonitorForm()
     if request.method == 'GET':
