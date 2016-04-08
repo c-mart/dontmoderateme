@@ -16,15 +16,12 @@ from jinja2 import Markup
 def send_activation_email(user):
     """Sends account activation email to passed user object"""
     activation_url = url_for('activate', code=base64.urlsafe_b64encode(user.pw_salt), _external=True)
-    body = "You have registered for an account on dontmoderate.me. " \
+    body = "You have created an account on dontmoderate.me. " \
            "Please visit this URL to activate your account: %s" % activation_url
-    html_body = "You have registered for an account on dontmoderate.me. " \
-                "Please click this link to activate your account: <a href=\"{0}\">{0}</a>".format(activation_url)
     msg = flask_mail.Message(subject="Activate your account on Don't Moderate Me",
                              sender="activation@dontmoderate.me",
                              recipients=[user.email],
-                             body=body,
-                             html=html_body)
+                             body=body)
     mail.send(msg)
 
 
@@ -32,12 +29,10 @@ def send_password_reset_email(email_addr, token):
     """Sends password reset email including passed token_string to passed email_addr."""
     reset_url = url_for('reset_password', token=token, _external=True)
     body = "Please visit this page to reset your password: %s" % reset_url
-    html_body = "Please click this link to reset your password: <a href=\"{0}\">{0}</a>".format(reset_url)
     msg = flask_mail.Message(subject="Reset your password on Don't Moderate Me",
                              sender="notify@dontmoderate.me",
                              recipients=[email_addr],
-                             body=body,
-                             html=html_body)
+                             body=body)
     mail.send(msg)
 
 

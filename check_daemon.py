@@ -86,14 +86,12 @@ def send_notification_email(check_id):
     with app.app_context():
         monitor_url = url_for('view_monitor', monitor_id=notify_check.monitor.id, _external=True)
         body = "See details and image of monitored web page at {0}".format(monitor_url)
-        html_body = "See details and image of monitored web page <a href=\"{0}\">here</a>.".format(monitor_url)
         msg = flask_mail.Message(subject="Monitor {0} for page {1}"
                                  .format("Up" if notify_check.result is True else "Down",
                                                                            notify_check.monitor.description),
                                  sender="notify@dontmoderate.me",
                                  recipients=[notify_check.user.email],
-                                 body=body,
-                                 html=html_body)
+                                 body=body)
         logger.info("Sending notification email to {0}".format(notify_check.user.email))
         mail.send(msg)
 

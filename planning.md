@@ -1,4 +1,3 @@
-- Piwik not working. Fix piwik
 - Fix backup log file creation
 - Get Gmail to not mark my messages as spam, use TLS and dkim
 
@@ -42,6 +41,7 @@ Testing options:
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- Piwik not working. Fix piwik
 - Check_daemon not checking new monitors very quickly
 - View for all events and checks, either across all monitors or for a specific monitor
 - Redesign dashboard
