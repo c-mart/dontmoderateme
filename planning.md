@@ -1,4 +1,4 @@
-- Fix backup log file creation
+- Will a sender name keep Gmail from marking my stuff as spam?
 
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context

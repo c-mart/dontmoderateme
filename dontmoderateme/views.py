@@ -19,7 +19,7 @@ def send_activation_email(user):
     body = "You have created an account on dontmoderate.me. " \
            "Please visit this URL to activate your account: %s" % activation_url
     msg = flask_mail.Message(subject="Activate your account on Don't Moderate Me",
-                             sender="activation@dontmoderate.me",
+                             sender="Don't Moderate Me <activation@dontmoderate.me>",
                              recipients=[user.email],
                              body=body)
     mail.send(msg)
@@ -30,7 +30,7 @@ def send_password_reset_email(email_addr, token):
     reset_url = url_for('reset_password', token=token, _external=True)
     body = "Please visit this page to reset your password: %s" % reset_url
     msg = flask_mail.Message(subject="Reset your password on Don't Moderate Me",
-                             sender="notify@dontmoderate.me",
+                             sender="Don't Moderate Me <notify@dontmoderate.me>",
                              recipients=[email_addr],
                              body=body)
     mail.send(msg)
@@ -38,7 +38,7 @@ def send_password_reset_email(email_addr, token):
 
 def send_feedback_email(text, sender_email):
     msg = flask_mail.Message(subject="DMM user feedback from " + sender_email,
-                             sender="feedback@dontmoderate.me",
+                             sender="Don't Moderate Me <feedback@dontmoderate.me>",
                              recipients=[app.config['FEEDBACK_EMAIL']],
                              body=text)
     mail.send(msg)

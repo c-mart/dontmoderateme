@@ -89,7 +89,7 @@ def send_notification_email(check_id):
         msg = flask_mail.Message(subject="Monitor {0} for page {1}"
                                  .format("Up" if notify_check.result is True else "Down",
                                                                            notify_check.monitor.description),
-                                 sender="notify@dontmoderate.me",
+                                 sender="Don't Moderate Me <notify@dontmoderate.me>",
                                  recipients=[notify_check.user.email],
                                  body=body)
         logger.info("Sending notification email to {0}".format(notify_check.user.email))
