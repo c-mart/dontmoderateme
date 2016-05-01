@@ -238,12 +238,21 @@ def dashboard():
 @app.route('/monitor/<monitor_id>')
 def view_monitor(monitor_id):
     """Overview of an existing monitor"""
-    monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
-    checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
-        .order_by(models.Check.timestamp.desc()).limit(10).all()
-    recent_events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
-        .order_by(models.Check.timestamp.desc()).limit(5).all()
+    # Todo refactor this
+    if flask_login.current_user.is_admin:
+        monitor = models.Monitor.query.filter_by(id=monitor_id).first_or_404()
+        checks = models.Check.query.filter_by(monitor=monitor)\
+            .order_by(models.Check.timestamp.desc()).limit(10).all()
+        recent_events = models.Check.query.filter_by(monitor=monitor, changed=True)\
+            .order_by(models.Check.timestamp.desc()).limit(5).all()
+    else:
+        monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
+        checks = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user)\
+            .order_by(models.Check.timestamp.desc()).limit(10).all()
+        recent_events = models.Check.query.filter_by(monitor=monitor, user=flask_login.current_user, changed=True)\
+            .order_by(models.Check.timestamp.desc()).limit(5).all()
     return render_template('view_monitor.html', monitor=monitor, recent_events=recent_events, checks=checks)
+
 
 @flask_login.login_required
 @app.route('/monitor-history/<monitor_id>')
