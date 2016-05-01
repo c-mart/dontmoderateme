@@ -13,6 +13,7 @@ class User(db.Model):
     pw_salt = db.Column(db.Binary)
     activated = db.Column(db.Boolean)  # Set to True once user clicks link in activation email
     enabled = db.Column(db.Boolean)
+    is_admin = db.Column(db.Boolean)
     create_timestamp = db.Column(db.DateTime)
 
     def set_password(self, password):
@@ -47,6 +48,11 @@ class User(db.Model):
     def get_id(self):
         """Flask-login requires this for some reason"""
         return self.id
+
+    @property
+    def is_admin(self):
+        """Returns boolean indicating whether user is admin"""
+        return self.is_admin
 
 
 class PasswordResetToken(db.Model):

@@ -1,4 +1,4 @@
-- Will a sender name keep Gmail from marking my stuff as spam?
+is_admin boolean lets admin view anyone's minotaur
 
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
@@ -19,7 +19,8 @@ Testing options:
 - Password reset workflow
 
 ## To do - features/usability
-- Will Gmail stop marking my messages as spam?
+- Recent Events table shows "Monitor Created" at the bottom even when that is not a recent event. Move this timestamp to another part of the page?
+- Will a sender name keep Gmail from marking my stuff as spam?
 - View all events and checks
 - "Monitor edited" should be an event.
 - Let users change their own password
