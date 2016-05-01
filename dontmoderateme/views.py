@@ -238,8 +238,8 @@ def dashboard():
 @app.route('/monitor/<monitor_id>')
 def view_monitor(monitor_id):
     """Overview of an existing monitor"""
-    # Todo refactor this
-    if flask_login.current_user.is_admin:
+    # Check if user is admin
+    if flask_login.current_user.is_admin is True:
         monitor = models.Monitor.query.filter_by(id=monitor_id).first_or_404()
         checks = models.Check.query.filter_by(monitor=monitor)\
             .order_by(models.Check.timestamp.desc()).limit(10).all()

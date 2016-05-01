@@ -49,11 +49,6 @@ class User(db.Model):
         """Flask-login requires this for some reason"""
         return self.id
 
-    @property
-    def is_admin(self):
-        """Returns boolean indicating whether user is admin"""
-        return self.is_admin
-
 
 class PasswordResetToken(db.Model):
     """Stores tokens used to authenticate users for a password reset."""
