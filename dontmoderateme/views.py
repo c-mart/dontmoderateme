@@ -145,7 +145,9 @@ def login():
                     if user.activated is True:
                         flask_login.login_user(user)
                         flash('You are logged in.')
-                        return redirect(url_for('dashboard'))
+                        next_page = request.args.get('next')
+                        # TODO validate that user has permission to access next_page
+                        return redirect(next_page or url_for('dashboard'))
                     else:
                         flash('You have not activated your account yet, please follow the link in the activation email.')
                         return render_template('activate.html')
@@ -157,8 +159,8 @@ def login():
             return render_template('login.html', form=form)
 
 
-@flask_login.login_required
 @app.route('/logout')
+@flask_login.login_required
 def logout():
     """Logs user out."""
     flask_login.logout_user()
@@ -223,8 +225,8 @@ def reset_password(token):
             return render_template('reset_password.html', form=form, token=token)
 
 
-@flask_login.login_required
 @app.route('/dashboard')
+@flask_login.login_required
 def dashboard():
     """View dashboard"""
     monitors = models.Monitor.query.filter_by(user=flask_login.current_user).\
@@ -234,8 +236,8 @@ def dashboard():
     return render_template('dashboard.html', monitors=monitors, checks=checks)
 
 
-@flask_login.login_required
 @app.route('/monitor/<monitor_id>')
+@flask_login.login_required
 def view_monitor(monitor_id):
     """Overview of an existing monitor"""
     # Check if user is admin
@@ -254,8 +256,8 @@ def view_monitor(monitor_id):
     return render_template('view_monitor.html', monitor=monitor, recent_events=recent_events, checks=checks)
 
 
-@flask_login.login_required
 @app.route('/monitor-history/<monitor_id>')
+@flask_login.login_required
 def view_monitor_history(monitor_id):
     """Detailed history for a monitor showing all checks"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
@@ -263,8 +265,9 @@ def view_monitor_history(monitor_id):
         .order_by(models.Check.timestamp.desc()).all()
     return render_template('view_monitor_history.html', monitor=monitor, checks=checks)
 
-@flask_login.login_required
+
 @app.route('/create-monitor', methods=['GET', 'POST'])
+@flask_login.login_required
 def create_monitor():
     """Create a new monitor"""
     monitor_count = models.Monitor.query.filter_by(user=flask_login.current_user).count()
@@ -290,8 +293,8 @@ def create_monitor():
             return render_template('create_edit_monitor.html', form=form)
 
 
-@flask_login.login_required
 @app.route('/edit-monitor/<monitor_id>', methods=['GET', 'POST'])
+@flask_login.login_required
 def edit_monitor(monitor_id):
     """Edit existing monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
@@ -312,8 +315,8 @@ def edit_monitor(monitor_id):
             return render_template('create_edit_monitor.html', form=form, monitor=monitor, edit=True)
 
 
-@flask_login.login_required
 @app.route('/delete-monitor/<monitor_id>')
+@flask_login.login_required
 def delete_monitor(monitor_id):
     """Delete a monitor"""
     monitor = models.Monitor.query.filter_by(id=monitor_id, user=flask_login.current_user).first_or_404()
@@ -323,8 +326,8 @@ def delete_monitor(monitor_id):
     return redirect(url_for('dashboard'))
 
 
-@flask_login.login_required
 @app.route('/event-image/<check_id>')
+@flask_login.login_required
 def view_event_image(check_id):
     check = models.Check.query.filter_by(id=check_id, user=flask_login.current_user).first_or_404()
     response = make_response(check.screenshot)

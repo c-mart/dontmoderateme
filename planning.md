@@ -1,5 +1,3 @@
-is_admin boolean lets admin view anyone's minotaur
-
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
 - Try getting pytest-flask to work
@@ -19,11 +17,11 @@ Testing options:
 - Password reset workflow
 
 ## To do - features/usability
+- Let users change their own password
 - Recent Events table shows "Monitor Created" at the bottom even when that is not a recent event. Move this timestamp to another part of the page?
 - Will a sender name keep Gmail from marking my stuff as spam?
 - View all events and checks
 - "Monitor edited" should be an event.
-- Let users change their own password
 - Immediately check monitor after creation
 - Fix recaptcha validation failure message "The response parameter is missing."
 - Don't let user create a duplicate monitor
@@ -41,6 +39,7 @@ Testing options:
 - One PostgreSQL container for both dev and testing databases
 
 ## Done
+- When user tries to access their monitor and isn't logged in, direct them to login page, then to their monitor
 - Postfix should be configured to send TLS email
 - Use TLS and dkim to send email
 - Piwik not working. Fix piwik
