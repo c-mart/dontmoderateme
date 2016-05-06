@@ -146,7 +146,8 @@ def login():
                         flask_login.login_user(user)
                         flash('You are logged in.')
                         next_page = request.args.get('next')
-                        # TODO validate that user has permission to access next_page
+                        # TODO validate user has permission to access next_page?
+                        # (We may not need to if that is checked by the view for next_page itself)
                         return redirect(next_page or url_for('dashboard'))
                     else:
                         flash('You have not activated your account yet, please follow the link in the activation email.')
