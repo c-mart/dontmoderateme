@@ -1,3 +1,5 @@
+**Restart docker container automatically on boot: https://docs.docker.com/engine/reference/run/#restart-policies-restart**
+
 Testing options:
 - Continue trying to get pytest to work on my own. probably have trouble with application context and request context
 - Try getting pytest-flask to work
